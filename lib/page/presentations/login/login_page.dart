@@ -15,9 +15,7 @@ class LoginPage extends GetView<LoginController> {
   @override
   Widget build(BuildContext context) {
     double _headerHeight = 250;
-    bool _isLoading = false;
     final _formKey = GlobalKey<FormState>();
-    var email, password;
     final _scaffoldKey = GlobalKey<ScaffoldState>();
 
     return Scaffold(
@@ -125,14 +123,8 @@ class LoginPage extends GetView<LoginController> {
                                       )),
                                   onPressed: () {
                                     if (_formKey.currentState!.validate()) {
-                                      controller.Login();
+                                      controller.Login(context);
                                     }
-                                    //After successful login we will redirect to profile page. Let's create profile page now
-                                    /*Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                MyHomePage()));*/
                                   },
                                 ),
                               ),
@@ -145,7 +137,7 @@ class LoginPage extends GetView<LoginController> {
                                     text: 'Buat Akun',
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {
-                                        Get.to(RegisterPage());
+                                        Get.toNamed(RegisterPage.routeName);
                                       },
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,

@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hastrade/page/presentations/dashboard/dashboard_controller.dart';
+import 'package:stylish_dialog/stylish_dialog.dart';
 
 import '../home/home_page.dart';
 
@@ -92,7 +93,24 @@ class DashboardPage extends GetView<DashboardController> {
                   ),
                   title: const Text('Log Out'),
                   onTap: () {
-                    controller.logout();
+                    StylishDialog(
+                      context: context,
+                      alertType: StylishDialogType.NORMAL,
+                      titleText: 'Perhatian',
+                      contentText: 'Apakah anda ingin keluar?',
+                      confirmButton: TextButton(
+                        onPressed: () {
+                          controller.logout();
+                        },
+                        child: Text('Ya'),
+                      ),
+                      cancelButton: TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text('Tidak'),
+                      ),
+                    ).show();
                   },
                 ),
               ],

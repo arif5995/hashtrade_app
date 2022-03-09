@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hastrade/page/presentations/login/login_page.dart';
@@ -13,9 +14,6 @@ class RegisterPage extends GetView<RegisterController> {
   @override
   Widget build(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
-    bool checkedValue = false;
-    bool checkboxValue = false;
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -30,6 +28,7 @@ class RegisterPage extends GetView<RegisterController> {
               padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
               alignment: Alignment.center,
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Form(
                     key: _formKey,
@@ -77,6 +76,13 @@ class RegisterPage extends GetView<RegisterController> {
                           child: TextFormField(
                             decoration: ThemeHelper().textInputDecoration(
                                 'First Name', 'Enter your first name'),
+                            validator: (val) {
+                              if (val!.isNotEmpty) {
+                                controller.firstname.value = val;
+                              } else {
+                                return 'Enter Your First Name';
+                              }
+                            },
                           ),
                           decoration: ThemeHelper().inputBoxDecorationShaddow(),
                         ),
@@ -87,6 +93,13 @@ class RegisterPage extends GetView<RegisterController> {
                           child: TextFormField(
                             decoration: ThemeHelper().textInputDecoration(
                                 'Last Name', 'Enter your last name'),
+                            validator: (val) {
+                              if (val!.isNotEmpty) {
+                                controller.lastname.value = val;
+                              } else {
+                                return 'Enter Your Last Name';
+                              }
+                            },
                           ),
                           decoration: ThemeHelper().inputBoxDecorationShaddow(),
                         ),
@@ -97,29 +110,55 @@ class RegisterPage extends GetView<RegisterController> {
                                 "E-mail address", "Enter your email"),
                             keyboardType: TextInputType.emailAddress,
                             validator: (val) {
-                              if (!(val!.isEmpty) &&
+                              if (val!.isEmpty ||
                                   !RegExp(r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$")
                                       .hasMatch(val)) {
                                 return "Enter a valid email address";
+                              } else {
+                                controller.email.value = val;
                               }
-                              return null;
                             },
                           ),
                           decoration: ThemeHelper().inputBoxDecorationShaddow(),
                         ),
                         SizedBox(height: 20.0),
                         Container(
-                          child: TextFormField(
-                            decoration: ThemeHelper().textInputDecoration(
-                                "Mobile Number", "Enter your mobile number"),
-                            keyboardType: TextInputType.phone,
-                            validator: (val) {
-                              if (!(val!.isEmpty) &&
-                                  !RegExp(r"^(\d+)*$").hasMatch(val)) {
-                                return "Enter a valid phone number";
-                              }
-                              return null;
-                            },
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                child: Text(
+                                  "+62",
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                                padding: EdgeInsets.fromLTRB(20, 11, 20, 11),
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(100),
+                                    border: Border.all(
+                                        color: Colors.grey.shade400)),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Flexible(
+                                child: Container(
+                                    child: TextFormField(
+                                  decoration: ThemeHelper().textInputDecoration(
+                                      "Mobile Number",
+                                      "Enter your mobile number"),
+                                  keyboardType: TextInputType.phone,
+                                  validator: (val) {
+                                    if (val!.isEmpty ||
+                                        !RegExp(r"^(\d+)*$").hasMatch(val)) {
+                                      return "Enter a valid phone number";
+                                    } else {
+                                      controller.noTelp.value = val;
+                                    }
+                                  },
+                                )),
+                              )
+                            ],
                           ),
                           decoration: ThemeHelper().inputBoxDecorationShaddow(),
                         ),
@@ -130,10 +169,12 @@ class RegisterPage extends GetView<RegisterController> {
                             decoration: ThemeHelper().textInputDecoration(
                                 "Password*", "Enter your password"),
                             validator: (val) {
-                              if (val!.isEmpty) {
+                              print("PASS $val");
+                              if (val!.isEmpty || val.length <= 5) {
                                 return "Please enter your password";
+                              } else {
+                                controller.password.value = val;
                               }
-                              return null;
                             },
                           ),
                           decoration: ThemeHelper().inputBoxDecorationShaddow(),
@@ -145,14 +186,13 @@ class RegisterPage extends GetView<RegisterController> {
                               children: <Widget>[
                                 Row(
                                   children: <Widget>[
-                                    Checkbox(
-                                        value: checkboxValue,
-                                        onChanged: (value) {
-                                          // setState(() {
-                                          //   checkboxValue = value!;
-                                          //   state.didChange(value);
-                                          // });
-                                        }),
+                                    Obx(
+                                      () => Checkbox(
+                                          value: controller.checkBox.value,
+                                          onChanged: (value) {
+                                            controller.cekBox(value!);
+                                          }),
+                                    ),
                                     Text(
                                       "I accept all terms and conditions.",
                                       style: TextStyle(color: Colors.grey),
@@ -174,10 +214,9 @@ class RegisterPage extends GetView<RegisterController> {
                             );
                           },
                           validator: (value) {
-                            if (!checkboxValue) {
+                            print("Val $value");
+                            if (controller.checkBox.value == false) {
                               return 'You need to accept terms and conditions';
-                            } else {
-                              return null;
                             }
                           },
                         ),
@@ -188,19 +227,24 @@ class RegisterPage extends GetView<RegisterController> {
                           child: ElevatedButton(
                             style: ThemeHelper().buttonStyle(),
                             child: Padding(
-                              padding:
-                                  const EdgeInsets.fromLTRB(40, 10, 40, 10),
-                              child: Text(
-                                "Register".toUpperCase(),
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
+                                padding:
+                                    const EdgeInsets.fromLTRB(40, 10, 40, 10),
+                                child: Obx(
+                                  () => Text(
+                                    controller.isLoading.value
+                                        ? 'Proccessing..'
+                                        : 'Login',
+                                    // 'Sign In'.toUpperCase(),
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white),
+                                  ),
+                                )),
                             onPressed: () {
-                              if (_formKey.currentState!.validate()) {}
+                              if (_formKey.currentState!.validate()) {
+                                controller.register(context);
+                              }
                             },
                           ),
                         ),

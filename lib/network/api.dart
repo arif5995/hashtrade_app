@@ -19,6 +19,14 @@ class Network {
         body: jsonEncode(data), headers: _setHeaders());
   }
 
+  register(data, apiURL) async {
+    var fullUrl = _url + apiURL;
+    print("API " + fullUrl);
+    print("Dta ${jsonEncode(data)}");
+    return await http.post(Uri.parse(fullUrl),
+        body: jsonEncode(data), headers: _setHeaders());
+  }
+
   getData(apiURL) async {
     var fullUrl = _url + apiURL;
     await _getToken();

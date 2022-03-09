@@ -1,7 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:hastrade/page/onboarding.dart.w';
+
+import 'presentations/onboarding/oanboarding_page.dart';
 
 class SplashScreen extends StatefulWidget {
   SplashScreen({Key? key, required this.title}) : super(key: key);

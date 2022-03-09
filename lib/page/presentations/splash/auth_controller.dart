@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
+import 'package:hastrade/page/presentations/dashboard/dashboard_page.dart';
 import 'package:hastrade/page/presentations/onboarding/oanboarding_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,12 +23,11 @@ class AuthController extends GetxController {
 
   void changeVisible() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
-    token.value = localStorage.getString('token')!;
-    if (token.isNotEmpty) {
-      Future.delayed(const Duration(milliseconds: 2000), () {
-        print("HOME PAGE");
-        // Get.off(HomePage());
-      });
+    token.value = localStorage.getString('token') ?? "";
+    print("TOKEN ${token.value}");
+    if (token.value != "") {
+      Future.delayed(const Duration(milliseconds: 2000),
+          () => Get.offAndToNamed(DashboardPage.routeName));
     } else {
       Future.delayed(const Duration(milliseconds: 2000), () {
         Get.off(OnBoardingPage());

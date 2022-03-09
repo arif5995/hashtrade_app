@@ -4,8 +4,8 @@ import 'package:hastrade/page/presentations/login/login_binding.dart';
 import 'package:hastrade/page/presentations/onboarding/oanboarding_controller.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 
-import '../../login.dart.w';
 import '../../widgets/button.dart';
+import '../login/login_page.dart';
 
 class OnBoardingPage extends GetView<OnboardingController> {
   static const routeName = "/onboarding";

@@ -1,11 +1,14 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hastrade/page/presentations/login/login_controller.dart';
 
 import '../../../common/theme_helper.dart';
-import '../../forgot_password.dart.w';
 import '../../widgets/header_widget.dart';
+import '../password/forgot_pasword_page.dart';
+import '../register/register_page.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends GetView<LoginController> {
   const LoginPage({Key? key}) : super(key: key);
   static const routName = "/login";
 
@@ -59,7 +62,7 @@ class LoginPage extends StatelessWidget {
                                           emailValue.isEmpty) {
                                         return 'Please enter your email';
                                       }
-                                      email = emailValue;
+                                      controller.email.value = emailValue!;
                                       return null;
                                     }),
                                 decoration:
@@ -77,7 +80,8 @@ class LoginPage extends StatelessWidget {
                                           passwordValue.isEmpty) {
                                         return 'Please enter your password';
                                       }
-                                      password = passwordValue;
+                                      controller.password.value =
+                                          passwordValue!;
                                       return null;
                                     }),
                                 decoration:
@@ -105,20 +109,23 @@ class LoginPage extends StatelessWidget {
                                 child: ElevatedButton(
                                   style: ThemeHelper().buttonStyle(),
                                   child: Padding(
-                                    padding:
-                                        EdgeInsets.fromLTRB(40, 10, 40, 10),
-                                    child: Text(
-                                      _isLoading ? 'Proccessing..' : 'Login',
-                                      // 'Sign In'.toUpperCase(),
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white),
-                                    ),
-                                  ),
+                                      padding:
+                                          EdgeInsets.fromLTRB(40, 10, 40, 10),
+                                      child: Obx(
+                                        () => Text(
+                                          controller.isLoading.value
+                                              ? 'Proccessing..'
+                                              : 'Login',
+                                          // 'Sign In'.toUpperCase(),
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white),
+                                        ),
+                                      )),
                                   onPressed: () {
                                     if (_formKey.currentState!.validate()) {
-                                      _login();
+                                      controller.Login();
                                     }
                                     //After successful login we will redirect to profile page. Let's create profile page now
                                     /*Navigator.pushReplacement(
@@ -138,11 +145,7 @@ class LoginPage extends StatelessWidget {
                                     text: 'Buat Akun',
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    RegistrationPage()));
+                                        Get.to(RegisterPage());
                                       },
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,

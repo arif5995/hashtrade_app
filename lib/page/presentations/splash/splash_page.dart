@@ -4,7 +4,7 @@ import 'package:hastrade/page/presentations/splash/auth_controller.dart';
 
 class SplashPage extends GetView<AuthController> {
   const SplashPage({Key? key}) : super(key: key);
-  static const routeName = '/splah';
+  static const routeName = '/splash';
 
   @override
   Widget build(BuildContext context) {

@@ -1,6 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:hastrade/network/api.dart';
-import 'dart:convert';
 import 'package:hastrade/page/stok_detail.dart';
 
 class HalamanStok extends StatefulWidget {
@@ -36,35 +37,37 @@ class _HalamanStokState extends State<HalamanStok> {
             child: _loadedStok.length == 0
                 ? Center(child: CircularProgressIndicator())
                 : ListView.builder(
-              itemCount: _loadedStok.length,
-              itemBuilder: (BuildContext ctx, index) {
-                return Card(
-                  child: ListTile(
-                    leading: Container(
-                      width: 100,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: NetworkImage(
-                                'https://hastrader.com/assets/images/frontend/stok/' +
-                                    _loadedStok[index]['data_values']
-                                    ["image"],
-                              ))),
-                    ),
-                    title:
-                    Text(_loadedStok[index]['data_values']['title']),
-                    onTap: (){
-                      var id = _loadedStok[index]['id'];
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => HalamanStokDetail(id:id)),
+                    itemCount: _loadedStok.length,
+                    itemBuilder: (BuildContext ctx, index) {
+                      return Card(
+                        child: ListTile(
+                          leading: Container(
+                            width: 100,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(
+                                      'https://hastrader.com/assets/images/frontend/stok/' +
+                                          _loadedStok[index]['data_values']
+                                              ["image"],
+                                    ))),
+                          ),
+                          title:
+                              Text(_loadedStok[index]['data_values']['title']),
+                          onTap: () {
+                            var id = _loadedStok[index]['id'];
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      HalamanStokDetail(id: id)),
+                            );
+                          },
+                          subtitle: Text(''),
+                        ),
                       );
                     },
-                    subtitle: Text(''),
-                  ),
-                );
-              },
-            )));
+                  )));
   }
 }

@@ -1,11 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hastrade/page/login.dart.w';
 import 'package:hastrade/page/presentations/password/forgot_password_verirfy_page.dart';
 
 import '../../../common/theme_helper.dart';
 import '../../widgets/header_widget.dart';
+import '../login/login_page.dart';
 
 class ForgotPasswordPage extends StatelessWidget {
   const ForgotPasswordPage({Key? key}) : super(key: key);

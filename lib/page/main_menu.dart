@@ -7,8 +7,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'analisis.dart';
 import 'home.dart';
-import 'login.dart.w';
 import 'news.dart';
+import 'presentations/login/login_page.dart';
 import 'stok.dart';
 import 'video.dart';
 

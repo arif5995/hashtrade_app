@@ -20,6 +20,8 @@ import '../home/home_binding.dart';
 class DashboardController extends GetxController {
   static DashboardController get to => Get.find();
   var currentIndex = 2.obs;
+  var namaorang = "";
+  var email = "";
 
   final pages = <String>[
     StockPage.routeName,
@@ -28,6 +30,13 @@ class DashboardController extends GetxController {
     VideosPage.routeName,
     NewsPage.routeName
   ];
+
+  @override
+  void onInit() {
+    super.onInit();
+    getProfil();
+    print("GET PROFIL");
+  }
 
   void changePage(int index) {
     currentIndex.value = index;
@@ -88,6 +97,29 @@ class DashboardController extends GetxController {
       localStorage.remove('user');
       localStorage.remove('token');
       Get.offAllNamed(LoginPage.routName);
+    }
+  }
+
+  void getProfil() async {
+    var res = await Network().getData('/get-profile');
+    var body = json.decode(res.body);
+
+    print("profil $body");
+    if (body != null) {
+      SharedPreferences localStorage = await SharedPreferences.getInstance();
+      // localStorage.setString("firstname", );
+      // localStorage.setString("lastname", body['lastname']);
+      localStorage.setString("email", body['email']);
+
+      /// get data
+      ///
+      namaorang = body['firstname'] + " " + body['lastname'];
+      email = body['email'];
+      update();
+
+      print("profil 1 ${namaorang}");
+    } else {
+      print("profil ${body}");
     }
   }
 }

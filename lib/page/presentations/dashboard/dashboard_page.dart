@@ -3,9 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hastrade/page/presentations/dashboard/dashboard_controller.dart';
+import 'package:hastrade/page/presentations/profil/profil_page.dart';
 import 'package:stylish_dialog/stylish_dialog.dart';
 
 import '../home/home_page.dart';
+import '../profil/profil_binding.dart';
 
 class DashboardPage extends GetView<DashboardController> {
   const DashboardPage({Key? key}) : super(key: key);
@@ -42,79 +44,110 @@ class DashboardPage extends GetView<DashboardController> {
             )
           ],
         ),
-        endDrawer: Container(
-          width: 200,
-          child: Drawer(
-            child: ListView(
-              // Important: Remove any padding from the ListView.
-              padding: EdgeInsets.only(top: 55),
-              children: [
-                ListTile(
-                  leading: Icon(
-                    Icons.face_unlock_outlined,
-                    color: Colors.black,
-                  ),
-                  trailing: Icon(
-                    Icons.arrow_forward_ios_sharp,
-                    color: Colors.black,
-                    size: 20,
-                  ),
-                  title: const Text('Profil'),
+        endDrawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              DrawerHeader(
+                decoration: BoxDecoration(color: Colors.blue),
+                child: InkWell(
                   onTap: () {
-                    // Update the state of the app.
-                    // ...
+                    Get.to(ProfilPage(), binding: ProfilBinding());
                   },
-                ),
-                ListTile(
-                  leading: Icon(
-                    Icons.info_outline,
-                    color: Colors.black,
-                  ),
-                  trailing: Icon(
-                    Icons.arrow_forward_ios_sharp,
-                    color: Colors.black,
-                    size: 20,
-                  ),
-                  title: const Text('Kebijakan Privasi'),
-                  onTap: () {
-                    // Update the state of the app.
-                    // ...
-                  },
-                ),
-                ListTile(
-                  leading: Icon(
-                    Icons.logout,
-                    color: Colors.black,
-                  ),
-                  trailing: Icon(
-                    Icons.arrow_forward_ios_sharp,
-                    color: Colors.black,
-                    size: 20,
-                  ),
-                  title: const Text('Log Out'),
-                  onTap: () {
-                    StylishDialog(
-                      context: context,
-                      alertType: StylishDialogType.NORMAL,
-                      titleText: 'Perhatian',
-                      contentText: 'Apakah anda ingin keluar?',
-                      confirmButton: TextButton(
-                        onPressed: () {
-                          controller.logout();
-                        },
-                        child: Text('Ya'),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      RawMaterialButton(
+                        onPressed: () {},
+                        child: Icon(
+                          Icons.person,
+                          color: Colors.grey.shade300,
+                          size: 40.0,
+                        ),
+                        shape: new CircleBorder(),
+                        elevation: 4.0,
+                        fillColor: Colors.white,
+                        padding: const EdgeInsets.all(15.0),
                       ),
-                      cancelButton: TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: Text('Tidak'),
+                      SizedBox(
+                        width: 10,
                       ),
-                    ).show();
-                  },
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            controller.namaorang,
+                            style: TextStyle(fontSize: 14, color: Colors.white),
+                          ),
+                          Text(
+                            controller.email,
+                            style: TextStyle(fontSize: 12, color: Colors.grey),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        width: 40,
+                      ),
+                      Icon(
+                        Icons.arrow_forward_ios_sharp,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                    ],
+                  ),
                 ),
-              ],
-            ),
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.info_outline,
+                  color: Colors.black,
+                ),
+                trailing: Icon(
+                  Icons.arrow_forward_ios_sharp,
+                  color: Colors.black,
+                  size: 20,
+                ),
+                title: const Text('Kebijakan Privasi'),
+                onTap: () {
+                  // Update the state of the app.
+                  // ...
+                },
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.logout,
+                  color: Colors.black,
+                ),
+                trailing: Icon(
+                  Icons.arrow_forward_ios_sharp,
+                  color: Colors.black,
+                  size: 20,
+                ),
+                title: const Text('Log Out'),
+                onTap: () {
+                  StylishDialog(
+                    context: context,
+                    alertType: StylishDialogType.NORMAL,
+                    titleText: 'Perhatian',
+                    contentText: 'Apakah anda ingin keluar?',
+                    confirmButton: TextButton(
+                      onPressed: () {
+                        controller.logout();
+                      },
+                      child: Text('Ya'),
+                    ),
+                    cancelButton: TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text('Tidak'),
+                    ),
+                  ).show();
+                },
+              ),
+            ],
           ),
         ),
         body: Navigator(

@@ -233,7 +233,7 @@ class RegisterPage extends GetView<RegisterController> {
                                   () => Text(
                                     controller.isLoading.value
                                         ? 'Proccessing..'
-                                        : 'Login',
+                                        : 'Register',
                                     // 'Sign In'.toUpperCase(),
                                     style: TextStyle(
                                         fontSize: 20,

@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-import 'analisis_controller.dart';
+import '../controller/analisis_controller.dart';
 
 class AnalisisBinding extends Bindings {
   @override

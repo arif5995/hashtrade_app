@@ -1,8 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:hastrade/network/api.dart';
 import 'dart:convert';
-import 'package:getwidget/getwidget.dart';
+
+import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:getwidget/getwidget.dart';
+import 'package:hastrade/network/api.dart';
 
 class HalamanNewsDetail extends StatefulWidget {
   final int id;
@@ -58,8 +59,9 @@ class _HalamanNewsDetailState extends State<HalamanNewsDetail> {
                           titleText: _loadedBlog[index]['data_values']['title'],
                           margin: const EdgeInsets.all(0),
                         ),
-                        content: Html(data: _loadedBlog[index]['data_values']
-                        ['description_nic']),
+                        content: Html(
+                            data: _loadedBlog[index]['data_values']
+                                ['description_nic']),
                         /*Text(_loadedBlog[index]['data_values']
                             ['description_nic'],textAlign: TextAlign.justify,),*/
                       );

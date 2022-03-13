@@ -5,7 +5,6 @@ import 'package:hastrade/page/presentations/password/password_controller.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/style.dart';
 
-import '../../../common/theme_helper.dart';
 import '../../widgets/header_widget.dart';
 
 class ForgotPasswordVerirfyPage extends GetView<PasswordController> {
@@ -14,6 +13,7 @@ class ForgotPasswordVerirfyPage extends GetView<PasswordController> {
   @override
   Widget build(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
+    OtpFieldController otpFieldController = OtpFieldController();
     bool _pinSuccess = false;
     double _headerHeight = 300;
     return Scaffold(
@@ -51,7 +51,7 @@ class ForgotPasswordVerirfyPage extends GetView<PasswordController> {
                               height: 10,
                             ),
                             Text(
-                              'Enter the verification code we just sent you on your email address.',
+                              'Masukkan kode verifikasi anda yang telah dikirim di whatsapp',
                               style: TextStyle(
                                   // fontSize: 20,
                                   fontWeight: FontWeight.bold,
@@ -67,73 +67,67 @@ class ForgotPasswordVerirfyPage extends GetView<PasswordController> {
                         child: Column(
                           children: <Widget>[
                             OTPTextField(
-                              length: 4,
+                              length: 6,
                               width: 300,
-                              fieldWidth: 50,
+                              controller: otpFieldController,
+                              fieldWidth: 30,
                               style: TextStyle(fontSize: 30),
                               textFieldAlignment: MainAxisAlignment.spaceAround,
                               fieldStyle: FieldStyle.underline,
                               onCompleted: (val) {
-                                controller.sendPin();
+                                controller.sendPin(
+                                    val, context, otpFieldController);
                               },
                             ),
-                            SizedBox(height: 50.0),
-                            Text.rich(
-                              TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: "If you didn't receive a code! ",
-                                    style: TextStyle(
-                                      color: Colors.black38,
+                            SizedBox(height: 10.0),
+                            Align(
+                              alignment: Alignment.topRight,
+                              child: Padding(
+                                  padding: const EdgeInsets.only(right: 25),
+                                  child: Obx(
+                                    () => Text(
+                                      "00:${controller.time.value}",
+                                      style: TextStyle(color: Colors.blue),
                                     ),
-                                  ),
-                                  TextSpan(
-                                    text: 'Resend',
-                                    recognizer: TapGestureRecognizer()
-                                      ..onTap = () {
-                                        showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return ThemeHelper().alartDialog(
-                                                "Successful",
-                                                "Verification code resend successful.",
-                                                context);
-                                          },
-                                        );
-                                      },
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.orange),
-                                  ),
-                                ],
-                              ),
+                                  )),
                             ),
-                            SizedBox(height: 40.0),
-                            Obx(
-                              () => Container(
-                                decoration: controller.pinSukses.value
-                                    ? ThemeHelper().buttonBoxDecoration(context)
-                                    : ThemeHelper().buttonBoxDecoration(
-                                        context, "#AAAAAA", "#757575"),
-                                child: ElevatedButton(
-                                  style: ThemeHelper().buttonStyle(),
-                                  child: Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        40, 10, 40, 10),
-                                    child: Text(
-                                      "Verify".toUpperCase(),
+                            SizedBox(height: 30.0),
+                            Obx(() {
+                              return Text.rich(
+                                TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: "Jika kamu tidak menerima kode! ",
                                       style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
+                                        color: Colors.black38,
                                       ),
                                     ),
-                                  ),
-                                  onPressed:
-                                      controller.pinSukses.value ? () {} : null,
+                                    TextSpan(
+                                      text: 'Kirim ulang',
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () {
+                                          controller.resendCoder(context);
+                                          // showDialog(
+                                          //   context: context,
+                                          //   builder: (BuildContext context) {
+                                          //     return ThemeHelper().alartDialog(
+                                          //         "Successful",
+                                          //         "Verification code resend successful.",
+                                          //         context);
+                                          //   },
+                                          // );
+                                        },
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: controller.resendCode.value
+                                              ? Colors.blue
+                                              : Colors.grey),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            )
+                              );
+                            }),
+                            SizedBox(height: 40.0),
                           ],
                         ),
                       )

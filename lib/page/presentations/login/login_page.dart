@@ -2,10 +2,11 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hastrade/page/presentations/login/login_controller.dart';
+import 'package:hastrade/page/presentations/password/forgot_pasword_page.dart';
+import 'package:hastrade/page/presentations/password/password_binding.dart';
 
 import '../../../common/theme_helper.dart';
 import '../../widgets/header_widget.dart';
-import '../password/forgot_pasword_page.dart';
 import '../register/register_page.dart';
 
 class LoginPage extends GetView<LoginController> {
@@ -91,7 +92,8 @@ class LoginPage extends GetView<LoginController> {
                                 alignment: Alignment.topRight,
                                 child: GestureDetector(
                                   onTap: () {
-                                    Get.to(ForgotPasswordPage());
+                                    Get.to(ForgotPasswordPage(),
+                                        binding: PasswordBinding());
                                   },
                                   child: Text(
                                     "Lupa password?",

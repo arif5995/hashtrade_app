@@ -1,13 +1,13 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hastrade/page/presentations/password/forgot_password_verirfy_page.dart';
+import 'package:hastrade/page/presentations/password/password_controller.dart';
 
 import '../../../common/theme_helper.dart';
 import '../../widgets/header_widget.dart';
 import '../login/login_page.dart';
 
-class ForgotPasswordPage extends StatelessWidget {
+class ForgotPasswordPage extends GetView<PasswordController> {
   const ForgotPasswordPage({Key? key}) : super(key: key);
 
   @override
@@ -39,7 +39,7 @@ class ForgotPasswordPage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Forgot Password?',
+                              'Lupa Password?',
                               style: TextStyle(
                                   fontSize: 35,
                                   fontWeight: FontWeight.bold,
@@ -50,7 +50,7 @@ class ForgotPasswordPage extends StatelessWidget {
                               height: 10,
                             ),
                             Text(
-                              'Enter the email address associated with your account.',
+                              'Masukkan nomer whatsapp anda untuk mendapatkan kode aktivasi',
                               style: TextStyle(
                                   // fontSize: 20,
                                   fontWeight: FontWeight.bold,
@@ -61,7 +61,7 @@ class ForgotPasswordPage extends StatelessWidget {
                               height: 10,
                             ),
                             Text(
-                              'We will email you a verification code to check your authenticity.',
+                              'Kami akan memberi nomor whatsapp Anda, kode verifikasi untuk memeriksa keaslian Anda.',
                               style: TextStyle(
                                 color: Colors.black38,
                                 // fontSize: 20,
@@ -77,48 +77,80 @@ class ForgotPasswordPage extends StatelessWidget {
                         child: Column(
                           children: <Widget>[
                             Container(
-                              child: TextFormField(
-                                decoration: ThemeHelper().textInputDecoration(
-                                    "Email", "Enter your email"),
-                                validator: (val) {
-                                  if (val!.isEmpty) {
-                                    return "Email can't be empty";
-                                  } else if (!RegExp(
-                                          r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$")
-                                      .hasMatch(val)) {
-                                    return "Enter a valid email address";
-                                  }
-                                  return null;
-                                },
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Container(
+                                    child: Text(
+                                      "+62",
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                    padding:
+                                        EdgeInsets.fromLTRB(20, 11, 20, 11),
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        border: Border.all(
+                                            color: Colors.grey.shade400)),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Flexible(
+                                    child: Container(
+                                        child: TextFormField(
+                                      decoration: ThemeHelper()
+                                          .textInputDecoration("Nomer Telepon",
+                                              "Masukkan nomer telepon anda"),
+                                      // initialValue: controller.user.mobile,
+                                      keyboardType: TextInputType.phone,
+                                      validator: (val) {
+                                        if (val!.isEmpty ||
+                                            !RegExp(r"^(\d+)*$")
+                                                .hasMatch(val)) {
+                                          return "masukkan nomer telepon yang sesuai";
+                                        } else {
+                                          controller.noTelpVerify.value = val;
+                                          return null;
+                                        }
+                                      },
+                                    )),
+                                  )
+                                ],
                               ),
                               decoration:
                                   ThemeHelper().inputBoxDecorationShaddow(),
                             ),
                             SizedBox(height: 40.0),
-                            Container(
-                              decoration:
-                                  ThemeHelper().buttonBoxDecoration(context),
-                              child: ElevatedButton(
-                                style: ThemeHelper().buttonStyle(),
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(40, 10, 40, 10),
-                                  child: Text(
-                                    "Send".toUpperCase(),
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
+                            Obx(() {
+                              return Container(
+                                decoration:
+                                    ThemeHelper().buttonBoxDecoration(context),
+                                child: ElevatedButton(
+                                  style: ThemeHelper().buttonStyle(),
+                                  child: Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        40, 10, 40, 10),
+                                    child: Text(
+                                      controller.proses.value
+                                          ? "Process...".toUpperCase()
+                                          : "Kirim".toUpperCase(),
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
+                                  onPressed: () {
+                                    if (_formKey.currentState!.validate()) {
+                                      controller.saveNoTelp(context);
+                                    }
+                                  },
                                 ),
-                                onPressed: () {
-                                  if (_formKey.currentState!.validate()) {
-                                    Get.to(ForgotPasswordVerirfyPage());
-                                  }
-                                },
-                              ),
-                            ),
+                              );
+                            }),
                             SizedBox(height: 30.0),
                             Text.rich(
                               TextSpan(

@@ -11,7 +11,10 @@ import 'package:hastrade/page/presentations/register/register_page.dart';
 import 'package:hastrade/page/presentations/splash/splash_binding.dart';
 import 'package:hastrade/page/presentations/splash/splash_page.dart';
 
-void main() => runApp(NewMyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(NewMyApp());
+}
 
 class NewMyApp extends StatelessWidget {
   const NewMyApp({Key? key}) : super(key: key);

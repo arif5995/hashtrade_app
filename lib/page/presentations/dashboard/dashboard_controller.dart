@@ -2,13 +2,14 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:hastrade/page/presentations/analisis/analisis_binding.dart';
+import 'package:hastrade/common/helper/constant_helper.dart';
 import 'package:hastrade/page/presentations/analisis/analisis_page.dart';
+import 'package:hastrade/page/presentations/analisis/binding/analisis_binding.dart';
 import 'package:hastrade/page/presentations/home/home_page.dart';
 import 'package:hastrade/page/presentations/login/login_page.dart';
 import 'package:hastrade/page/presentations/news/news_binding.dart';
 import 'package:hastrade/page/presentations/news/news_page.dart';
-import 'package:hastrade/page/presentations/stock/stock_binding.dart';
+import 'package:hastrade/page/presentations/stock/binding/stock_binding.dart';
 import 'package:hastrade/page/presentations/stock/stock_page.dart';
 import 'package:hastrade/page/presentations/videos/videos_binding.dart';
 import 'package:hastrade/page/presentations/videos/videos_page.dart';
@@ -22,6 +23,9 @@ class DashboardController extends GetxController {
   var currentIndex = 2.obs;
   var namaorang = "";
   var email = "";
+  var imgUser = "".obs;
+  var firstname = "".obs;
+  var lastname = "".obs;
 
   final pages = <String>[
     StockPage.routeName,
@@ -35,7 +39,18 @@ class DashboardController extends GetxController {
   void onInit() {
     super.onInit();
     getProfil();
+    getMinUser();
     print("GET PROFIL");
+  }
+
+  void getMinUser() async {
+    SharedPreferences _pref = await SharedPreferences.getInstance();
+    String data = ConstantHelper.IMAGE_NETWORK_USER +
+        _pref.getString(ConstantHelper.IMAGE_USER).toString();
+    firstname.value = _pref.getString(ConstantHelper.FIRSTNAME)!;
+    lastname.value = _pref.getString(ConstantHelper.LASTNAME)!;
+
+    print("FOTO ${data}");
   }
 
   void changePage(int index) {
@@ -108,8 +123,10 @@ class DashboardController extends GetxController {
     if (body != null) {
       SharedPreferences localStorage = await SharedPreferences.getInstance();
       // localStorage.setString("firstname", );
-      // localStorage.setString("lastname", body['lastname']);
+      localStorage.setInt("iduser", body['id']);
       localStorage.setString("email", body['email']);
+
+      print('ID ${body}');
 
       /// get data
       ///

@@ -1,12 +1,20 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:hastrade/page/presentations/password/password_binding.dart';
+import 'package:hastrade/page/presentations/password/update_password_page.dart';
+import 'package:hastrade/page/presentations/profil/profil_binding.dart';
+import 'package:hastrade/page/presentations/profil/profil_controller.dart';
+import 'package:hastrade/page/presentations/profil/update_profil.dart';
 
 import '../../widgets/header_widget.dart';
 
-class ProfilPage extends StatelessWidget {
+class ProfilPage extends GetView<ProfilController> {
   const ProfilPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final profilController = Get.put(ProfilController());
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -17,123 +25,158 @@ class ProfilPage extends StatelessWidget {
         iconTheme: IconThemeData(color: Colors.white),
       ),
       body: SingleChildScrollView(
-        child: Stack(
-          children: [
-            Container(
-              height: 100,
-              child: HeaderWidget(100, false, Icons.house_rounded),
-            ),
-            Container(
-              alignment: Alignment.center,
-              margin: EdgeInsets.fromLTRB(25, 10, 25, 10),
-              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child: Column(
-                children: [
-                  Container(
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      border: Border.all(width: 5, color: Colors.white),
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 20,
-                          offset: const Offset(5, 5),
-                        ),
-                      ],
-                    ),
-                    child: Icon(
-                      Icons.person,
-                      size: 80,
-                      color: Colors.grey.shade300,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Text(
-                    'Mr. Hamzah Muslimin',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Text(
-                    'CEO HasTrade',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(10),
-                    child: Column(
-                      children: <Widget>[
-                        Container(
-                          padding:
-                              const EdgeInsets.only(left: 8.0, bottom: 4.0),
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            "User Information",
-                            style: TextStyle(
-                              color: Colors.black87,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16,
-                            ),
-                            textAlign: TextAlign.left,
-                          ),
-                        ),
-                        Card(
-                          child: Container(
-                            alignment: Alignment.topLeft,
-                            padding: EdgeInsets.all(15),
-                            child: Column(
-                              children: <Widget>[
-                                Column(
-                                  children: <Widget>[
-                                    ...ListTile.divideTiles(
-                                      color: Colors.grey,
-                                      tiles: [
-                                        ListTile(
-                                          contentPadding: EdgeInsets.symmetric(
-                                              horizontal: 12, vertical: 4),
-                                          leading: Icon(Icons.my_location),
-                                          title: Text("Location"),
-                                          subtitle: Text("USA"),
+        child: GetBuilder<ProfilController>(
+          builder: (controller) {
+            return controller.loading
+                ? Container(child: Center(child: CircularProgressIndicator()))
+                : Stack(
+                    children: [
+                      Container(
+                        height: 100,
+                        child: HeaderWidget(100, false, Icons.house_rounded),
+                      ),
+                      Container(
+                        alignment: Alignment.center,
+                        margin: EdgeInsets.fromLTRB(25, 10, 25, 10),
+                        padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                        child: Column(
+                          children: [
+                            Obx(() => CachedNetworkImage(
+                                imageUrl: profilController.imgNetwork.value,
+                                placeholder: (context, url) =>
+                                    CircularProgressIndicator(),
+                                imageBuilder: (context, imageProvider) =>
+                                    Container(
+                                      height: 120,
+                                      width: 120,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(60)),
+                                        border: Border.all(
+                                            width: 5, color: Colors.white),
+                                        image: DecorationImage(
+                                          image: imageProvider,
+                                          fit: BoxFit.cover,
                                         ),
-                                        ListTile(
-                                          leading: Icon(Icons.email),
-                                          title: Text("Email"),
-                                          subtitle:
-                                              Text("donaldtrump@gmail.com"),
-                                        ),
-                                        ListTile(
-                                          leading: Icon(Icons.phone),
-                                          title: Text("Phone"),
-                                          subtitle: Text("99--99876-56"),
-                                        ),
-                                        ListTile(
-                                          leading: Icon(Icons.person),
-                                          title: Text("About Me"),
-                                          subtitle: Text(
-                                              "This is a about me link and you can khow about me in this section."),
-                                        ),
-                                      ],
+                                      ),
                                     ),
-                                  ],
-                                )
-                              ],
+                                errorWidget: (context, url, error) => Icon(
+                                      Icons.person,
+                                      size: 30,
+                                      color: Colors.grey,
+                                    ))),
+                            SizedBox(
+                              height: 20,
                             ),
-                          ),
-                        )
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            )
-          ],
+                            Text(
+                              "${controller.user.firstname} ${controller.user.lastname}",
+                              style: TextStyle(
+                                  fontSize: 22, fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(10),
+                              child: Column(
+                                children: <Widget>[
+                                  Container(
+                                    padding: const EdgeInsets.only(
+                                        left: 8.0, bottom: 4.0),
+                                    alignment: Alignment.topLeft,
+                                    child: Text(
+                                      "User Information",
+                                      style: TextStyle(
+                                        color: Colors.black87,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16,
+                                      ),
+                                      textAlign: TextAlign.left,
+                                    ),
+                                  ),
+                                  Card(
+                                    child: Container(
+                                      alignment: Alignment.topLeft,
+                                      padding: EdgeInsets.all(15),
+                                      child: Column(
+                                        children: <Widget>[
+                                          Column(
+                                            children: <Widget>[
+                                              ...ListTile.divideTiles(
+                                                color: Colors.grey,
+                                                tiles: [
+                                                  ListTile(
+                                                    contentPadding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 12,
+                                                            vertical: 4),
+                                                    leading:
+                                                        Icon(Icons.my_location),
+                                                    title: Text("Location"),
+                                                    subtitle: Text(
+                                                        "${controller.user.address}"),
+                                                  ),
+                                                  ListTile(
+                                                    leading: Icon(Icons.email),
+                                                    title: Text("Email"),
+                                                    subtitle: Text(
+                                                        "${controller.user.email}"),
+                                                  ),
+                                                  ListTile(
+                                                    leading: Icon(Icons.phone),
+                                                    title: Text("Phone"),
+                                                    subtitle: Text(
+                                                        "${controller.user.mobile}"),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                TextButton.icon(
+                                    onPressed: () {
+                                      Get.to(UpdateProfil(),
+                                          binding: ProfilBinding());
+                                    },
+                                    icon: Icon(Icons.edit),
+                                    label: Text(
+                                      "Update Profil",
+                                      style: TextStyle(color: Colors.blue),
+                                    )),
+                                TextButton.icon(
+                                    onPressed: () {
+                                      Get.to(UpdatePassword(),
+                                          binding: PasswordBinding());
+                                    },
+                                    icon: Icon(Icons.lock_open_rounded),
+                                    label: Text(
+                                      "Ganti Password",
+                                      style: TextStyle(color: Colors.blue),
+                                    ))
+                              ],
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  );
+          },
         ),
       ),
     );

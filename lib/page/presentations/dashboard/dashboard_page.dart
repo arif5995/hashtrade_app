@@ -1,8 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hastrade/page/presentations/dashboard/dashboard_controller.dart';
+import 'package:hastrade/page/presentations/privacy_police/privacy_binding.dart';
+import 'package:hastrade/page/presentations/privacy_police/privacy_police_page.dart';
+import 'package:hastrade/page/presentations/profil/profil_controller.dart';
 import 'package:hastrade/page/presentations/profil/profil_page.dart';
 import 'package:stylish_dialog/stylish_dialog.dart';
 
@@ -15,33 +18,46 @@ class DashboardPage extends GetView<DashboardController> {
 
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+    final profilController = Get.put(ProfilController());
+
     return GetBuilder<DashboardController>(builder: (controller) {
       return Scaffold(
-        key: _scaffoldKey,
         appBar: AppBar(
           backgroundColor: Colors.white,
-          title: Image.asset('assets/logo30x150.png', fit: BoxFit.scaleDown),
+          title: Row(
+            children: [
+              Flexible(
+                child: Image.asset(
+                  'assets/logoHastrade.png',
+                  fit: BoxFit.scaleDown,
+                  width: 50,
+                  height: 50,
+                ),
+              ),
+              SizedBox(
+                width: 8,
+              ),
+              Flexible(
+                child: Image.asset(
+                  'assets/textHasTrade.png',
+                  fit: BoxFit.scaleDown,
+                  width: 100,
+                  height: 50,
+                ),
+              ),
+            ],
+          ),
           actions: <Widget>[
-            IconButton(
-              icon: Icon(
-                Icons.notifications_none,
-                color: Colors.black,
-              ),
-              onPressed: () {
-                // _videos();
-                // do something
-              },
-            ),
-            IconButton(
-              icon: Icon(
-                Icons.settings,
-                color: Colors.black,
-              ),
-              onPressed: () {
-                _scaffoldKey.currentState?.openEndDrawer();
-              },
-            )
+            Builder(
+                builder: (context) => IconButton(
+                      icon: Icon(
+                        Icons.menu,
+                        color: Colors.black,
+                      ),
+                      onPressed: () {
+                        Scaffold.of(context).openEndDrawer();
+                      },
+                    ))
           ],
         ),
         endDrawer: Drawer(
@@ -57,43 +73,77 @@ class DashboardPage extends GetView<DashboardController> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      RawMaterialButton(
-                        onPressed: () {},
-                        child: Icon(
-                          Icons.person,
-                          color: Colors.grey.shade300,
-                          size: 40.0,
-                        ),
-                        shape: new CircleBorder(),
-                        elevation: 4.0,
-                        fillColor: Colors.white,
-                        padding: const EdgeInsets.all(15.0),
+                      Obx(
+                        () => CachedNetworkImage(
+                            imageUrl: profilController.imgNetwork.value,
+                            progressIndicatorBuilder:
+                                (context, url, downloadProgress) => Container(
+                                    height: 60,
+                                    width: 60,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(50)),
+                                    ),
+                                    child: CircularProgressIndicator(
+                                        value: downloadProgress.progress,
+                                        color: Colors.blue)),
+                            imageBuilder: (context, imageProvider) => Container(
+                                  height: 60,
+                                  width: 60,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(50)),
+                                    border: Border.all(
+                                        width: 1, color: Colors.white),
+                                    image: DecorationImage(
+                                      image: imageProvider,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                            errorWidget: (context, url, error) => Icon(
+                                  Icons.person,
+                                  size: 30,
+                                  color: Colors.grey,
+                                )),
                       ),
                       SizedBox(
                         width: 10,
                       ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            controller.namaorang,
-                            style: TextStyle(fontSize: 14, color: Colors.white),
-                          ),
-                          Text(
-                            controller.email,
-                            style: TextStyle(fontSize: 12, color: Colors.grey),
-                          )
-                        ],
+                      Flexible(
+                        fit: FlexFit.tight,
+                        flex: 5,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              controller.namaorang,
+                              style:
+                                  TextStyle(fontSize: 14, color: Colors.white),
+                            ),
+                            Text(
+                              controller.email,
+                              style:
+                                  TextStyle(fontSize: 12, color: Colors.white),
+                            )
+                          ],
+                        ),
                       ),
                       SizedBox(
                         width: 40,
                       ),
-                      Icon(
-                        Icons.arrow_forward_ios_sharp,
-                        color: Colors.white,
-                        size: 20,
+                      Flexible(
+                        fit: FlexFit.tight,
+                        flex: 1,
+                        child: Icon(
+                          Icons.arrow_forward_ios_sharp,
+                          color: Colors.white,
+                          size: 20,
+                        ),
                       ),
                     ],
                   ),
@@ -111,8 +161,8 @@ class DashboardPage extends GetView<DashboardController> {
                 ),
                 title: const Text('Kebijakan Privasi'),
                 onTap: () {
-                  // Update the state of the app.
-                  // ...
+                  Get.to(PrivacyPolicePage(), binding: PrivacyBinding());
+                  Scaffold.of(context).openDrawer();
                 },
               ),
               ListTile(

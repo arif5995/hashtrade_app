@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -27,7 +28,8 @@ class UpdateProfil extends GetView<ProfilController> {
         iconTheme: IconThemeData(color: Colors.white),
       ),
       body: GetBuilder<ProfilController>(
-        builder: (controller) {
+        initState: (_) => ProfilController().getDataProfil(),
+        builder: (profil) {
           return SingleChildScrollView(
             child: Stack(
               children: [
@@ -49,7 +51,7 @@ class UpdateProfil extends GetView<ProfilController> {
                             GestureDetector(
                               child: Stack(
                                 children: [
-                                  if (controller.load)
+                                  if (profil.load)
                                     Container(
                                       height: 120,
                                       width: 120,
@@ -60,7 +62,7 @@ class UpdateProfil extends GetView<ProfilController> {
                                         border: Border.all(
                                             width: 5, color: Colors.white),
                                         image: DecorationImage(
-                                            image: FileImage(controller.image),
+                                            image: FileImage(profil.image),
                                             fit: BoxFit.cover),
                                         color: Colors.white,
                                         boxShadow: [
@@ -73,43 +75,61 @@ class UpdateProfil extends GetView<ProfilController> {
                                       ),
                                     )
                                   else
-                                    GetX<ProfilController>(
-                                      builder: (profil) {
-                                        return Container(
-                                            width: 120,
-                                            height: 120,
-                                            padding: EdgeInsets.all(10),
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(100),
-                                              image: DecorationImage(
-                                                  image: profil.loadImg.value
-                                                      ? NetworkImage(profil
-                                                          .imgNetwork.value)
-                                                      : AssetImage(
-                                                              'assets/deame.png')
-                                                          as ImageProvider,
-                                                  fit: BoxFit.cover),
-                                              border: Border.all(
-                                                  width: 5,
-                                                  color: Colors.white),
-                                              color: Colors.white,
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.black12,
-                                                  blurRadius: 20,
-                                                  offset: const Offset(5, 5),
+                                    CachedNetworkImage(
+                                        imageUrl: profil.imgNetwork,
+                                        progressIndicatorBuilder: (context, url,
+                                                downloadProgress) =>
+                                            Container(
+                                                height: 120,
+                                                width: 120,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  border: Border.all(
+                                                      width: 5,
+                                                      color: Colors.white),
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(100)),
                                                 ),
-                                              ],
+                                                child:
+                                                    CupertinoActivityIndicator()),
+                                        imageBuilder: (context,
+                                                imageProvider) =>
+                                            Container(
+                                              height: 120,
+                                              width: 120,
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(100)),
+                                                border: Border.all(
+                                                    width: 5,
+                                                    color: Colors.white),
+                                                image: DecorationImage(
+                                                  image: imageProvider,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
                                             ),
-                                            child: controller.imgNetwork.isEmpty
-                                                ? Image.asset(
-                                                    'assets/deame.png',
-                                                    fit: BoxFit.cover,
-                                                  )
-                                                : null);
-                                      },
-                                    ),
+                                        errorWidget: (context, url, error) =>
+                                            ClipOval(
+                                              child: Material(
+                                                color: Colors
+                                                    .white, // Button color
+                                                child: InkWell(
+                                                  // splashColor: Colors.red, // Splash color
+                                                  onTap: () {},
+                                                  child: SizedBox(
+                                                      width: 120,
+                                                      height: 120,
+                                                      child: Icon(
+                                                        Icons.person,
+                                                        size: 50,
+                                                        color: Colors.grey,
+                                                      )),
+                                                ),
+                                              ),
+                                            )),
                                   Container(
                                     padding: EdgeInsets.fromLTRB(80, 80, 0, 0),
                                     child: IconButton(
@@ -143,10 +163,12 @@ class UpdateProfil extends GetView<ProfilController> {
                                                           padding:
                                                               EdgeInsets.zero,
                                                           onPressed: () {
-                                                            controller.getPicture(
+                                                            profil.getPicture(
                                                                 source:
                                                                     ImageSource
-                                                                        .camera);
+                                                                        .camera,
+                                                                img: profil
+                                                                    .imgNetwork);
                                                           },
                                                           icon: Icon(
                                                             Icons.camera,
@@ -179,10 +201,12 @@ class UpdateProfil extends GetView<ProfilController> {
                                                           padding:
                                                               EdgeInsets.zero,
                                                           onPressed: () {
-                                                            controller.getPicture(
+                                                            profil.getPicture(
                                                                 source:
                                                                     ImageSource
-                                                                        .gallery);
+                                                                        .gallery,
+                                                                img: profil
+                                                                    .imgNetwork);
                                                           },
                                                           icon: Icon(
                                                             Icons.image,
@@ -190,7 +214,7 @@ class UpdateProfil extends GetView<ProfilController> {
                                                             size: 50,
                                                           )),
                                                       Center(
-                                                          child: Text('Camera'))
+                                                          child: Text('Galeri'))
                                                     ],
                                                   ),
                                                 ),
@@ -209,10 +233,10 @@ class UpdateProfil extends GetView<ProfilController> {
                               child: TextFormField(
                                 decoration: ThemeHelper().textInputDecoration(
                                     'First Name', 'Enter your first name'),
-                                initialValue: controller.user.firstname,
+                                initialValue: profil.user.firstname,
                                 validator: (val) {
                                   if (val!.isNotEmpty) {
-                                    controller.user.firstname = val;
+                                    profil.user.firstname = val;
                                   } else {
                                     return 'Enter Your First Name';
                                   }
@@ -228,10 +252,10 @@ class UpdateProfil extends GetView<ProfilController> {
                               child: TextFormField(
                                 decoration: ThemeHelper().textInputDecoration(
                                     'Last Name', 'Enter your last name'),
-                                initialValue: controller.user.lastname,
+                                initialValue: profil.user.lastname,
                                 validator: (val) {
                                   if (val!.isNotEmpty) {
-                                    controller.user.lastname = val;
+                                    profil.user.lastname = val;
                                   } else {
                                     return 'Enter Your Last Name';
                                   }
@@ -246,14 +270,14 @@ class UpdateProfil extends GetView<ProfilController> {
                                 decoration: ThemeHelper().textInputDecoration(
                                     "E-mail address", "Enter your email"),
                                 keyboardType: TextInputType.emailAddress,
-                                initialValue: controller.user.email,
+                                initialValue: profil.user.email,
                                 validator: (val) {
                                   if (val!.isEmpty ||
                                       !RegExp(r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$")
                                           .hasMatch(val)) {
                                     return "Enter a valid email address";
                                   } else {
-                                    controller.user.email = val;
+                                    profil.user.email = val;
                                   }
                                 },
                               ),
@@ -288,7 +312,7 @@ class UpdateProfil extends GetView<ProfilController> {
                                       decoration: ThemeHelper()
                                           .textInputDecoration("Mobile Number",
                                               "Enter your mobile number"),
-                                      initialValue: controller.user.mobile,
+                                      initialValue: profil.user.mobile,
                                       keyboardType: TextInputType.phone,
                                       validator: (val) {
                                         if (val!.isEmpty ||
@@ -296,7 +320,7 @@ class UpdateProfil extends GetView<ProfilController> {
                                                 .hasMatch(val)) {
                                           return "Enter a valid phone number";
                                         } else {
-                                          controller.user.mobile = val;
+                                          profil.user.mobile = val;
                                         }
                                       },
                                     )),
@@ -314,12 +338,12 @@ class UpdateProfil extends GetView<ProfilController> {
                                         'Address', 'Enter your address'),
                                 keyboardType: TextInputType.multiline,
                                 maxLines: 5,
-                                initialValue: controller.user.address == null
+                                initialValue: profil.user.address == null
                                     ? ''
-                                    : controller.user.address,
+                                    : profil.user.address,
                                 validator: (val) {
                                   if (val!.isNotEmpty) {
-                                    controller.user.address = val;
+                                    profil.user.address = val;
                                   } else {
                                     return 'Enter Your Last Name';
                                   }
@@ -336,23 +360,22 @@ class UpdateProfil extends GetView<ProfilController> {
                               child: ElevatedButton(
                                 style: ThemeHelper().buttonStyle(),
                                 child: Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        40, 10, 40, 10),
-                                    child: Obx(
-                                      () => Text(
-                                        controller.isLoading.value
-                                            ? 'Proccessing..'
-                                            : 'Update',
-                                        // 'Sign In'.toUpperCase(),
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white),
-                                      ),
-                                    )),
+                                  padding:
+                                      const EdgeInsets.fromLTRB(40, 10, 40, 10),
+                                  child: Text(
+                                    profil.isLoading
+                                        ? 'Proccessing..'
+                                        : 'Update',
+                                    // 'Sign In'.toUpperCase(),
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white),
+                                  ),
+                                ),
                                 onPressed: () {
                                   if (_formKey.currentState!.validate()) {
-                                    controller.updateProfil(context);
+                                    profil.updateProfil(context);
                                   }
                                 },
                               ),

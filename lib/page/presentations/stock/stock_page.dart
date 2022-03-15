@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hastrade/common/helper/constant_helper.dart';
 import 'package:hastrade/page/presentations/stock/controller/stock_controller.dart';
+
+import '../../../common/helper/constant_helper.dart';
 
 class StockPage extends GetView<StockController> {
   const StockPage({Key? key}) : super(key: key);
@@ -9,7 +10,14 @@ class StockPage extends GetView<StockController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: SafeArea(child: GetBuilder<StockController>(
+    return Scaffold(
+        body: SafeArea(
+            child: GetBuilder<StockController>(
+      init: StockController(),
+      initState: (val) {
+        print("STOK");
+        controller.getStock();
+      },
       builder: (controller) {
         return controller.loading
             ? Center(child: CircularProgressIndicator())

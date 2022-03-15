@@ -35,19 +35,20 @@ class LoginController extends GetxController {
         localStorage.setString('user', json.encode(body['user']));
         print('TOKEN ${localStorage.getString('token')}');
         isLoading.value = false;
+        DialogHelper.loading(context, content: 'Sedang Login...').dismiss();
         Get.offAllNamed(DashboardPage.routeName);
       } else {
         print(body['message']);
         msg.value = body['message'];
+        DialogHelper.loading(context, content: 'Sedang Login...').dismiss();
         DialogHelper.warning(context,
                 content: "Cek Email dan Password", title: "Perhatian")
             .show();
-        DialogHelper.loading(context, content: 'Sedang Login...').dismiss();
         isLoading.value = false;
       }
     } catch (e) {
-      DialogHelper.error(context, title: "Terjadi Kesalahan!").show();
       DialogHelper.loading(context, content: 'Sedang Login...').dismiss();
+      DialogHelper.error(context, title: "Terjadi Kesalahan!").show();
     }
   }
 }

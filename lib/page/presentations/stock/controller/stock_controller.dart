@@ -22,10 +22,10 @@ class StockController extends GetxController {
 
   @override
   void onInit() {
-    super.onInit();
     print('GET STOK');
     getStock();
     getStokByDateNow();
+    super.onInit();
   }
 
   void getStock() async {

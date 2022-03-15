@@ -18,6 +18,7 @@ class DialogHelper {
   static StylishDialog sukses(BuildContext context,
       {String title = "", String content = "", Widget? widget}) {
     StylishDialog dialog = StylishDialog(
+        dismissOnTouchOutside: false,
         context: context,
         alertType: StylishDialogType.SUCCESS,
         titleText: title,

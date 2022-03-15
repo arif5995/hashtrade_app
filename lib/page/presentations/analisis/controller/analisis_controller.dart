@@ -58,17 +58,17 @@ class AnalisisController extends GetxController {
   }
 
   void getAnalisiByDateNow() async {
+    loading = true;
     try {
       var res = await Network().getDataStock('/analisis-front');
       var data = json.decode(res.body);
 
       if (res.statusCode == 200 && data['success'] == 'true') {
-        loading = false;
-        update();
-
         analisisModelfront.value = (data["message"] as List)
             .map((e) => StokModel.fromJson(e))
             .toList();
+        loading = false;
+        update();
         print("analisis ${analisisModelfront.length}");
       } else {
         loading = false;

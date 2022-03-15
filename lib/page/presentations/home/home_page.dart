@@ -7,12 +7,11 @@ import 'package:hastrade/page/presentations/analisis/analisis_new_page.dart';
 import 'package:hastrade/page/presentations/analisis/controller/analisis_controller.dart';
 import 'package:hastrade/page/presentations/dashboard/dashboard_controller.dart';
 import 'package:hastrade/page/presentations/home/home_controller.dart';
+import 'package:hastrade/page/presentations/news/controller/news_controller.dart';
 import 'package:hastrade/page/presentations/stock/controller/stock_controller.dart';
 import 'package:hastrade/page/presentations/stock/stok_now_page.dart';
 
 import '../../../network/api.dart';
-import '../../news_detail.dart';
-import '../../video_detail.dart';
 import '../stock/binding/stock_binding.dart';
 
 class HomePage extends StatefulWidget {
@@ -29,6 +28,7 @@ class _HomePageState extends State<HomePage> {
   final homeController = Get.find<HomeController>();
   final stokController = Get.put(StockController());
   final analisisController = Get.put(AnalisisController());
+  final newsController = Get.put(NewsController());
 
   List _loadedBlog = [];
   List _loadedVideo = [];
@@ -87,7 +87,56 @@ class _HomePageState extends State<HomePage> {
             child: Row(
               children: <Widget>[
                 Expanded(
-                  child: ListTile(
+                    child: GetBuilder<StockController>(
+                  initState: (_) => StockController().getStokByDateNow(),
+                  builder: (stok) {
+                    return ListTile(
+                        leading: Container(
+                          alignment: Alignment.bottomCenter,
+                          width: 45.0,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: <Widget>[
+                              Container(
+                                height: 20,
+                                width: 8.0,
+                                color: Colors.grey.shade300,
+                              ),
+                              const SizedBox(width: 4.0),
+                              Container(
+                                height: 25,
+                                width: 8.0,
+                                color: Colors.grey.shade300,
+                              ),
+                              const SizedBox(width: 4.0),
+                              Container(
+                                height: 40,
+                                width: 8.0,
+                                color: Colors.blue,
+                              ),
+                              const SizedBox(width: 4.0),
+                              Container(
+                                height: 30,
+                                width: 8.0,
+                                color: Colors.grey.shade300,
+                              ),
+                            ],
+                          ),
+                        ),
+                        title: Text("Stok Pick"),
+                        subtitle: Text(
+                            stok.stokModelfront.length.toString() + " Stok"),
+                        onTap: () {
+                          if (stok.stokModelfront.length != 0) {
+                            Get.to(StockNowPage(), binding: StockBinding());
+                          }
+                        });
+                  },
+                )),
+                VerticalDivider(),
+                Expanded(child: GetBuilder<AnalisisController>(
+                  builder: (analisis) {
+                    return ListTile(
                       leading: Container(
                         alignment: Alignment.bottomCenter,
                         width: 45.0,
@@ -109,7 +158,7 @@ class _HomePageState extends State<HomePage> {
                             Container(
                               height: 40,
                               width: 8.0,
-                              color: Colors.blue,
+                              color: Colors.red,
                             ),
                             const SizedBox(width: 4.0),
                             Container(
@@ -120,63 +169,18 @@ class _HomePageState extends State<HomePage> {
                           ],
                         ),
                       ),
-                      title: Text("Stok Pick"),
-                      subtitle: Obx(() => Text(
-                          stokController.stokModelfront.length.toString() +
-                              " Stok")),
+                      title: Text("Analisis"),
+                      subtitle: Text(
+                          analisis.analisisModelfront.length.toString() +
+                              " Analisis"),
                       onTap: () {
-                        if (stokController.stokModelfront.length != 0) {
-                          Get.to(StockNowPage(), binding: StockBinding());
+                        if (analisis.analisisModelfront.length != 0) {
+                          Get.to(AnalisisNewPage());
                         }
-                      }),
-                ),
-                VerticalDivider(),
-                Expanded(
-                  child: ListTile(
-                    leading: Container(
-                      alignment: Alignment.bottomCenter,
-                      width: 45.0,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: <Widget>[
-                          Container(
-                            height: 20,
-                            width: 8.0,
-                            color: Colors.grey.shade300,
-                          ),
-                          const SizedBox(width: 4.0),
-                          Container(
-                            height: 25,
-                            width: 8.0,
-                            color: Colors.grey.shade300,
-                          ),
-                          const SizedBox(width: 4.0),
-                          Container(
-                            height: 40,
-                            width: 8.0,
-                            color: Colors.red,
-                          ),
-                          const SizedBox(width: 4.0),
-                          Container(
-                            height: 30,
-                            width: 8.0,
-                            color: Colors.grey.shade300,
-                          ),
-                        ],
-                      ),
-                    ),
-                    title: Text("Analisis"),
-                    subtitle: Obx(() => Text(analisisController
-                            .analisisModelfront.length
-                            .toString() +
-                        " Analisis")),
-                    onTap: () {
-                      if (analisisController.analisisModelfront.length != 0) {
-                        Get.to(AnalisisNewPage());
-                      }
-                    },
-                  ),
-                ),
+                      },
+                    );
+                  },
+                )),
               ],
             ),
           ),
@@ -243,12 +247,7 @@ class _HomePageState extends State<HomePage> {
                                     subtitle: Text(''),
                                     onTap: () {
                                       var id = _loadedBlog[index]['id'];
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                HalamanNewsDetail(id: id)),
-                                      );
+                                      newsController.getDetailNews(id, context);
                                     },
                                   ),
                                 ]));
@@ -348,11 +347,11 @@ class _HomePageState extends State<HomePage> {
               : GestureDetector(
                   onTap: () {
                     var id = _loadedVideo[index]['id'];
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => HalamanVideoDetail(id: id)),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    // builder: (context) => HalamanVideoDetail(id: id)),
+                    // );
                   },
                   child: Container(
                     padding: const EdgeInsets.all(8),

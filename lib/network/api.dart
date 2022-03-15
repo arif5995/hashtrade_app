@@ -75,23 +75,25 @@ class Network {
     await _getToken();
     var fullUrl = Uri.parse(_url + apiURL + "/" + id);
     print('URL UPDATE $fullUrl header ${_setHeaders()}');
-    try {
-      var request = http.MultipartRequest('POST', fullUrl);
-      request = _jsonToFormData(request, data);
-      request.headers.addAll(_setHeaders());
-      if (file != null) {
-        request.files
-            .add(await http.MultipartFile.fromPath('image', file.path));
-      }
-      response = await request.send();
-      final respon1 = await response.stream.toBytes();
-      final respon2 = String.fromCharCodes(respon1);
-      print("CEK UPDATE PROFIL $request dan $respon2");
-      return response;
-    } catch (e) {
-      print('ERROR $e');
+    var request = http.MultipartRequest('POST', fullUrl);
+    request = _jsonToFormData(request, data);
+    request.headers.addAll(_setHeaders());
+    print("CEKK $file");
+    if (file != null) {
+      print("CEKK");
+      request.files.add(await http.MultipartFile.fromPath('image', file.path));
     }
+    response = await request.send();
+    final respon1 = await response.stream.toBytes();
+    final respon2 = String.fromCharCodes(respon1);
+    print("CEK UPDATE PROFIL $request dan $respon2");
     return response;
+    // try {
+    //
+    // } catch (e) {
+    //   print('ERROR $e');
+    // }
+    // return response;
   }
 
   _jsonToFormData(http.MultipartRequest request, Map<String, dynamic> data) {

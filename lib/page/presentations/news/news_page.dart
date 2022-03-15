@@ -1,75 +1,53 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:hastrade/page/presentations/news/controller/news_controller.dart';
 
-import '../../../network/api.dart';
-import '../../news_detail.dart';
+import '../../../common/helper/constant_helper.dart';
 
-class NewsPage extends StatefulWidget {
+class NewsPage extends GetView<NewsController> {
   const NewsPage({Key? key}) : super(key: key);
-  static const routeName = "/News";
-
-  @override
-  _NewsPageState createState() => _NewsPageState();
-}
-
-class _NewsPageState extends State<NewsPage> {
-  List _loadedBlog = [];
-
-  Future<void> _fetchData() async {
-    var response = await Network().getData('/blog');
-    final data = json.decode(response.body);
-
-    setState(() {
-      _loadedBlog = data;
-    });
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _fetchData();
-  }
+  static const routeName = '/news';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: SafeArea(
-            child: _loadedBlog.length == 0
-                ? Center(child: CircularProgressIndicator())
-                : ListView.builder(
-                    itemCount: _loadedBlog.length,
-                    itemBuilder: (BuildContext ctx, index) {
-                      return Card(
-                        child: ListTile(
-                          leading: Container(
-                            width: 100,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                image: DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: NetworkImage(
-                                      'https://hastrader.com/assets/images/frontend/blog/' +
-                                          _loadedBlog[index]['data_values']
-                                              ["image"],
-                                    ))),
-                          ),
-                          title:
-                              Text(_loadedBlog[index]['data_values']['title']),
-                          subtitle: Text(''),
-                          onTap: () {
-                            var id = _loadedBlog[index]['id'];
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      HalamanNewsDetail(id: id)),
-                            );
-                          },
-                        ),
-                      );
-                    },
-                  )));
+            child: GetBuilder<NewsController>(
+      init: NewsController(),
+      initState: (val) {
+        print("STOK");
+        controller.getDataNews();
+      },
+      builder: (controller) {
+        return controller.loading
+            ? Center(child: CircularProgressIndicator())
+            : Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListView.builder(
+                  itemCount: controller.newsModel.length,
+                  itemBuilder: (BuildContext ctx, index) {
+                    var dataNews = controller.newsModel[index];
+                    return Card(
+                      child: ListTile(
+                        leading: dataNews.data_values!.image != ""
+                            ? Image.network(
+                                ConstantHelper.IMAGE_NETWORK_NEWS_FRONTEND +
+                                    dataNews.data_values!.image!)
+                            : Image.asset('assets/imagenotfound.png'),
+                        title: Text(dataNews.data_values!.title!),
+                        trailing: Text(dataNews.data_values!.catatan!),
+                        onTap: () {
+                          controller.loading
+                              ? Center(child: CircularProgressIndicator())
+                              : controller.getDetailNews(dataNews.id!, context);
+                        },
+                        subtitle: Text(''),
+                      ),
+                    );
+                  },
+                ),
+              );
+      },
+    )));
   }
 }

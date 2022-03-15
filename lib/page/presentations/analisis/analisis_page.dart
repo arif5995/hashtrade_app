@@ -9,7 +9,12 @@ class AnalisisPage extends GetView<AnalisisController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: SafeArea(child: GetBuilder<AnalisisController>(
+    return Scaffold(
+        body: SafeArea(
+            child: GetBuilder<AnalisisController>(
+      initState: (_) {
+        controller.getAnalisis();
+      },
       builder: (controller) {
         return controller.loading
             ? Center(child: CircularProgressIndicator())

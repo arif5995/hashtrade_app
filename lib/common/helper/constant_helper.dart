@@ -3,6 +3,10 @@ class ConstantHelper {
       'https://hastrader.com/assets/images/frontend/stok/';
   static const IMAGE_NETWORK_ANALISIS_FRONTEND =
       'https://hastrader.com/assets/images/frontend/analisis/';
+  static const IMAGE_NETWORK_VIDEO_FRONTEND =
+      'https://hastrader.com/assets/images/frontend/video/';
+  static const IMAGE_NETWORK_NEWS_FRONTEND =
+      'https://hastrader.com/assets/images/frontend/blog/';
   static const IMAGE_NETWORK_USER = 'https://api.hastrader.com/image_profile/';
   static const TOKEN = 'token';
   static const IMAGE_USER = 'image_user';

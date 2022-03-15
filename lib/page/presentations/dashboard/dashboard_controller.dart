@@ -7,11 +7,11 @@ import 'package:hastrade/page/presentations/analisis/analisis_page.dart';
 import 'package:hastrade/page/presentations/analisis/binding/analisis_binding.dart';
 import 'package:hastrade/page/presentations/home/home_page.dart';
 import 'package:hastrade/page/presentations/login/login_page.dart';
-import 'package:hastrade/page/presentations/news/news_binding.dart';
+import 'package:hastrade/page/presentations/news/binding/news_binding.dart';
 import 'package:hastrade/page/presentations/news/news_page.dart';
 import 'package:hastrade/page/presentations/stock/binding/stock_binding.dart';
 import 'package:hastrade/page/presentations/stock/stock_page.dart';
-import 'package:hastrade/page/presentations/videos/videos_binding.dart';
+import 'package:hastrade/page/presentations/videos/binding/videos_binding.dart';
 import 'package:hastrade/page/presentations/videos/videos_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

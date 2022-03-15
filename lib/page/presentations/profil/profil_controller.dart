@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hastrade/common/helper/dialog_helper.dart';
@@ -12,12 +12,12 @@ import '../../../network/api.dart';
 
 class ProfilController extends GetxController {
   ProfilModel user = ProfilModel();
-  var isLoading = false.obs;
-  late File image;
+  var isLoading = false;
+  var image;
   var load = false;
   var loading = false;
   var loadImg = false.obs;
-  var imgNetwork = "".obs;
+  var imgNetwork = "";
 
   @override
   void onInit() {
@@ -33,7 +33,9 @@ class ProfilController extends GetxController {
     getDataProfil();
   }
 
-  void getPicture({required ImageSource source}) async {
+  void getPicture({required ImageSource source, required String img}) async {
+    print("UIUIJ $img");
+    CachedNetworkImage.evictFromCache(img);
     final file =
         await ImagePicker.platform.pickImage(source: source, imageQuality: 40);
     if (file?.path != null) {
@@ -47,20 +49,23 @@ class ProfilController extends GetxController {
 
   void getDataProfil() async {
     loading = true;
+
+    print("PROFIL $user");
     var res = await Network().getData('/get-profile');
     var body = json.decode(res.body);
 
     if (body != null) {
       user = ProfilModel.fromJson(body);
       if (user.image != null || user.image!.isNotEmpty || user.image == "") {
-        imgNetwork.value =
-            "https://api.hastrader.com/image_profile/${user.image}";
+        imgNetwork = "https://api.hastrader.com/image_profile/${user.image}";
+        update();
+        print("FOTO $imgNetwork}");
+        print("FOTO ${user.mobile}");
         loadImg.value = true;
       } else {
         loadImg.value = false;
       }
       loading = false;
-      print("PROFIL $user");
     } else {
       loading = false;
       update();
@@ -78,29 +83,31 @@ class ProfilController extends GetxController {
 
   void updateProfil(BuildContext context) async {
     DialogHelper.loading(context, content: "Proses Update").show();
-    isLoading.value = true;
-    try {
-      var data = {
-        'firstname': user.firstname,
-        'lastname': user.lastname,
-        'email': user.email,
-        'mobile': "62${user.mobile}",
-        'address': user.address,
-      };
+    isLoading = true;
+    var data = {
+      'firstname': user.firstname,
+      'lastname': user.lastname,
+      'email': user.email,
+      'mobile': "62${user.mobile}",
+      'address': user.address,
+    };
 
+    try {
       print("UPDATE PROFILE $data");
 
       var res = await Network().postUpdate(data, '/update-profile', image);
 
       if (res.statusCode == 200 || res.statusCode == 201) {
-        isLoading.value = false;
+        isLoading = false;
+        update();
         print("SUKSES UPDATE");
 
         DialogHelper.sukses(context,
             title: "Terima Kasih",
-            content: "Proses Update",
+            content: "Proses Update Berhasil",
             widget: TextButton(
               onPressed: () {
+                getDataProfil();
                 Get.back();
                 Get.back();
                 Get.back();
@@ -111,6 +118,10 @@ class ProfilController extends GetxController {
               ),
             )).show();
       } else {
+        loading = false;
+        update();
+
+        DialogHelper.loading(context, content: "Proses Update").dismiss();
         print("gagal UPDATE");
         DialogHelper.error(context,
             title: "Gagal",
@@ -131,7 +142,6 @@ class ProfilController extends GetxController {
           title: "Terjadi Kesalahan",
           widget: TextButton(
             onPressed: () {
-              Get.back();
               Get.back();
               Get.back();
             },

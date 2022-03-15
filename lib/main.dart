@@ -43,7 +43,7 @@ class NewMyApp extends StatelessWidget {
         GetPage(
             name: RegisterPage.routeName,
             page: () => RegisterPage(),
-            binding: RegisterBinding())
+            binding: RegisterBinding()),
       ],
     );
   }

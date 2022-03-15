@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hastrade/page/presentations/password/password_binding.dart';
@@ -14,7 +15,6 @@ class ProfilPage extends GetView<ProfilController> {
 
   @override
   Widget build(BuildContext context) {
-    final profilController = Get.put(ProfilController());
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -26,8 +26,10 @@ class ProfilPage extends GetView<ProfilController> {
       ),
       body: SingleChildScrollView(
         child: GetBuilder<ProfilController>(
-          builder: (controller) {
-            return controller.loading
+          initState: (_) => ProfilController().getDataProfil(),
+          builder: (profil) {
+            print("fOTO ${profil.imgNetwork}");
+            return profil.loading
                 ? Container(child: Center(child: CircularProgressIndicator()))
                 : Stack(
                     children: [
@@ -41,10 +43,21 @@ class ProfilPage extends GetView<ProfilController> {
                         padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                         child: Column(
                           children: [
-                            Obx(() => CachedNetworkImage(
-                                imageUrl: profilController.imgNetwork.value,
-                                placeholder: (context, url) =>
-                                    CircularProgressIndicator(),
+                            CachedNetworkImage(
+                                imageUrl: profil.imgNetwork,
+                                progressIndicatorBuilder: (context, url,
+                                        downloadProgress) =>
+                                    Container(
+                                        height: 120,
+                                        width: 120,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          border: Border.all(
+                                              width: 5, color: Colors.white),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(100)),
+                                        ),
+                                        child: CupertinoActivityIndicator()),
                                 imageBuilder: (context, imageProvider) =>
                                     Container(
                                       height: 120,
@@ -52,7 +65,7 @@ class ProfilPage extends GetView<ProfilController> {
                                       decoration: BoxDecoration(
                                         color: Colors.white,
                                         borderRadius: BorderRadius.all(
-                                            Radius.circular(60)),
+                                            Radius.circular(100)),
                                         border: Border.all(
                                             width: 5, color: Colors.white),
                                         image: DecorationImage(
@@ -61,16 +74,28 @@ class ProfilPage extends GetView<ProfilController> {
                                         ),
                                       ),
                                     ),
-                                errorWidget: (context, url, error) => Icon(
-                                      Icons.person,
-                                      size: 30,
-                                      color: Colors.grey,
-                                    ))),
+                                errorWidget: (context, url, error) => ClipOval(
+                                      child: Material(
+                                        color: Colors.white, // Button color
+                                        child: InkWell(
+                                          // splashColor: Colors.red, // Splash color
+                                          onTap: () {},
+                                          child: SizedBox(
+                                              width: 120,
+                                              height: 120,
+                                              child: Icon(
+                                                Icons.person,
+                                                size: 50,
+                                                color: Colors.grey,
+                                              )),
+                                        ),
+                                      ),
+                                    )),
                             SizedBox(
                               height: 20,
                             ),
                             Text(
-                              "${controller.user.firstname} ${controller.user.lastname}",
+                              "${profil.user.firstname} ${profil.user.lastname}",
                               style: TextStyle(
                                   fontSize: 22, fontWeight: FontWeight.bold),
                             ),
@@ -118,19 +143,19 @@ class ProfilPage extends GetView<ProfilController> {
                                                         Icon(Icons.my_location),
                                                     title: Text("Location"),
                                                     subtitle: Text(
-                                                        "${controller.user.address}"),
+                                                        "${profil.user.address}"),
                                                   ),
                                                   ListTile(
                                                     leading: Icon(Icons.email),
                                                     title: Text("Email"),
                                                     subtitle: Text(
-                                                        "${controller.user.email}"),
+                                                        "${profil.user.email}"),
                                                   ),
                                                   ListTile(
                                                     leading: Icon(Icons.phone),
                                                     title: Text("Phone"),
                                                     subtitle: Text(
-                                                        "${controller.user.mobile}"),
+                                                        "${profil.user.mobile}"),
                                                   ),
                                                 ],
                                               ),

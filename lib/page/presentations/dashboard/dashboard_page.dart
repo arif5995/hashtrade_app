@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hastrade/page/presentations/dashboard/dashboard_controller.dart';
@@ -64,18 +65,20 @@ class DashboardPage extends GetView<DashboardController> {
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
-              DrawerHeader(
-                decoration: BoxDecoration(color: Colors.blue),
-                child: InkWell(
-                  onTap: () {
-                    Get.to(ProfilPage(), binding: ProfilBinding());
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Obx(
-                        () => CachedNetworkImage(
-                            imageUrl: profilController.imgNetwork.value,
+              GetBuilder<ProfilController>(initState: (_) {
+                ProfilController().getDataProfil();
+              }, builder: (profil) {
+                return DrawerHeader(
+                  decoration: BoxDecoration(color: Colors.blue),
+                  child: InkWell(
+                    onTap: () {
+                      Get.to(ProfilPage(), binding: ProfilBinding());
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        CachedNetworkImage(
+                            imageUrl: profil.imgNetwork,
                             progressIndicatorBuilder:
                                 (context, url, downloadProgress) => Container(
                                     height: 60,
@@ -85,9 +88,7 @@ class DashboardPage extends GetView<DashboardController> {
                                       borderRadius:
                                           BorderRadius.all(Radius.circular(50)),
                                     ),
-                                    child: CircularProgressIndicator(
-                                        value: downloadProgress.progress,
-                                        color: Colors.blue)),
+                                    child: CupertinoActivityIndicator()),
                             imageBuilder: (context, imageProvider) => Container(
                                   height: 60,
                                   width: 60,
@@ -103,52 +104,64 @@ class DashboardPage extends GetView<DashboardController> {
                                     ),
                                   ),
                                 ),
-                            errorWidget: (context, url, error) => Icon(
-                                  Icons.person,
-                                  size: 30,
-                                  color: Colors.grey,
+                            errorWidget: (context, url, error) => ClipOval(
+                                  child: Material(
+                                    color: Colors.white, // Button color
+                                    child: InkWell(
+                                      // splashColor: Colors.red, // Splash color
+                                      onTap: () {},
+                                      child: SizedBox(
+                                          width: 60,
+                                          height: 60,
+                                          child: Icon(
+                                            Icons.person,
+                                            size: 25,
+                                            color: Colors.grey,
+                                          )),
+                                    ),
+                                  ),
                                 )),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Flexible(
-                        fit: FlexFit.tight,
-                        flex: 5,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              controller.namaorang,
-                              style:
-                                  TextStyle(fontSize: 14, color: Colors.white),
-                            ),
-                            Text(
-                              controller.email,
-                              style:
-                                  TextStyle(fontSize: 12, color: Colors.white),
-                            )
-                          ],
+                        SizedBox(
+                          width: 10,
                         ),
-                      ),
-                      SizedBox(
-                        width: 40,
-                      ),
-                      Flexible(
-                        fit: FlexFit.tight,
-                        flex: 1,
-                        child: Icon(
-                          Icons.arrow_forward_ios_sharp,
-                          color: Colors.white,
-                          size: 20,
+                        Flexible(
+                          fit: FlexFit.tight,
+                          flex: 5,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                controller.namaorang,
+                                style: TextStyle(
+                                    fontSize: 14, color: Colors.white),
+                              ),
+                              Text(
+                                controller.email,
+                                style: TextStyle(
+                                    fontSize: 12, color: Colors.white),
+                              )
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                        SizedBox(
+                          width: 40,
+                        ),
+                        Flexible(
+                          fit: FlexFit.tight,
+                          flex: 1,
+                          child: Icon(
+                            Icons.arrow_forward_ios_sharp,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ),
+                );
+              }),
               ListTile(
                 leading: Icon(
                   Icons.info_outline,

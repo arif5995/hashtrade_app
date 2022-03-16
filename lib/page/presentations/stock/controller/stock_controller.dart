@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hastrade/common/helper/dialog_helper.dart';
 import 'package:hastrade/page/data/models/stok_model.dart';
@@ -19,18 +20,37 @@ class StockController extends GetxController {
   var detailStok = <StokModel>[].obs;
   var loadImg = false.obs;
   late StylishDialog _dialog;
+  var _currentPage = 1;
 
   @override
   void onInit() {
     print('GET STOK');
-    getStock();
     getStokByDateNow();
     super.onInit();
   }
 
-  void getStock() async {
+  Future refreshStok() async {
     loading = true;
-    var res = await Network().getDataStock('/stok');
+    await Future.delayed(Duration(seconds: 2));
+    _currentPage += 1;
+    var res = await Network().getDataStock('/stok/$_currentPage');
+    var data = json.decode(res.body);
+    if (data != []) {
+      detailStok.addAll((data as List).map((e) => StokModel.fromJson(e)));
+      update();
+    } else {
+      detailStok.clear();
+      _currentPage = 0;
+      loading = false;
+      update();
+    }
+    print("DATA 2 $_currentPage " "${detailStok}");
+    loading = false;
+  }
+
+  void getStock(BuildContext context) async {
+    loading = true;
+    var res = await Network().getDataStock('/stok/0');
     var data = json.decode(res.body);
     print('STOK ${json.decode(res.body)}');
     print('STATUS ${res.statusCode}');
@@ -42,13 +62,22 @@ class StockController extends GetxController {
     } else {
       loading = false;
       update();
+      DialogHelper.warning(context,
+              title: "Perhatian!",
+              content: 'Stock Pick Kosong!',
+              widget: TextButton(
+                  onPressed: () {
+                    Get.back();
+                  },
+                  child: Text('Oke')))
+          .show();
       print("DATA STOK ${res.body}");
     }
   }
 
   void getDetailStok(int id, BuildContext context) async {
     print(id);
-    var res = await Network().getData("/stok/$id");
+    var res = await Network().getData("/stok-detail/$id");
     var bodi = json.decode(res.body);
     DialogHelper.loading(context, content: 'Mohon menunggu').show();
     if (bodi != []) {

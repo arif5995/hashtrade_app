@@ -14,6 +14,12 @@ class LoginController extends GetxController {
   var email = ''.obs;
   var password = ''.obs;
   var msg = ''.obs;
+  var visible = true.obs;
+
+  void hidePass() {
+    visible.value = !visible.value;
+    print(visible);
+  }
 
   void Login(BuildContext context) async {
     isLoading.value = true;

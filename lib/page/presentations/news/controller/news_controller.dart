@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hastrade/page/presentations/news/binding/news_binding.dart';
 import 'package:hastrade/page/presentations/news/news_detail_page.dart';
@@ -13,16 +14,16 @@ class NewsController extends GetxController {
   var loading = false;
   List<StokModel> newsModel = <StokModel>[].obs;
   var newsDetailModel = <StokModel>[].obs;
+  var _currentPage = 0;
 
   @override
   void onInit() {
-    getDataNews();
     super.onInit();
   }
 
-  void getDataNews() async {
+  void getDataNews(BuildContext context) async {
     loading = true;
-    var res = await Network().getDataStock('/blog');
+    var res = await Network().getDataStock('/blog/0');
     var data = json.decode(res.body);
     print('news ${json.decode(res.body)}');
     print('STATUS ${res.statusCode}');
@@ -34,6 +35,15 @@ class NewsController extends GetxController {
     } else {
       loading = false;
       update();
+      DialogHelper.warning(context,
+              title: "Perhatian!",
+              content: 'News Kosong!',
+              widget: TextButton(
+                  onPressed: () {
+                    Get.back();
+                  },
+                  child: Text('Oke')))
+          .show();
       print("DATA NEWS ${res.body}");
     }
   }
@@ -41,7 +51,7 @@ class NewsController extends GetxController {
   void getDetailNews(int id, BuildContext context) async {
     loading = true;
     print(id);
-    var res = await Network().getData("/blog/$id");
+    var res = await Network().getData("/blog-detail/$id");
     var bodi = json.decode(res.body);
     DialogHelper.loading(context, content: 'Mohon menunggu').show();
     if (bodi != []) {
@@ -55,5 +65,27 @@ class NewsController extends GetxController {
         Get.to(NewsDetailPage(), binding: NewsBinding());
       }
     }
+  }
+
+  Future refreshNews() async {
+    loading = true;
+    await Future.delayed(Duration(seconds: 2));
+    _currentPage += 1;
+    var res = await Network().getDataStock('/blog/$_currentPage');
+    var data = json.decode(res.body);
+    if (data != []) {
+      loading = false;
+      newsModel.addAll((data as List).map((e) => StokModel.fromJson(e)));
+      update();
+    } else {
+      newsModel.clear();
+      var res = await Network().getDataStock('/blog/0');
+      var data = json.decode(res.body);
+      newsModel.addAll((data as List).map((e) => StokModel.fromJson(e)));
+      loading = false;
+      update();
+    }
+    update();
+    print("DATA 2 $_currentPage");
   }
 }

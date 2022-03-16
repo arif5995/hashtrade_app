@@ -12,38 +12,96 @@ import '../analisis_detail_page.dart';
 class AnalisisController extends GetxController {
   var loading = false;
   var analisisModelfront = <StokModel>[].obs;
-  var analisisModel = <StokModel>[].obs;
+  var analisisModel = RxList<StokModel>([]);
   var detailAnalisis = <StokModel>[].obs;
+  ScrollController scrollController =
+      ScrollController(initialScrollOffset: 0.0, keepScrollOffset: true);
+  int _currentPage = 1;
 
   @override
   void onInit() {
     super.onInit();
     getAnalisiByDateNow();
-    getAnalisis();
+    loadMore();
   }
 
-  void getAnalisis() async {
+  @override
+  void onClose() {
+    super.onClose();
+    scrollController.dispose();
+    print('close');
+  }
+
+  void getAnalisis(BuildContext context) async {
+    _currentPage = 0;
     loading = true;
-    var res = await Network().getDataStock('/analisis');
+    var res = await Network().getDataStock('/analisis/$_currentPage');
     var data = json.decode(res.body);
     print('STOK ${json.decode(res.body)}');
     print('STATUS ${res.statusCode}');
     if (res.statusCode == 200) {
       loading = false;
       update();
-      analisisModel.value =
-          (data as List).map((e) => StokModel.fromJson(e)).toList();
+
+      analisisModel.assignAll((data as List).map((e) => StokModel.fromJson(e)));
+      // analisisModel.value =
+      //     (data as List).map((e) => StokModel.fromJson(e)).toList();
       print("DATA 1 ${analisisModel}");
     } else {
       loading = false;
       update();
+      DialogHelper.warning(context,
+              title: "Perhatian!",
+              content: 'Analisi Kosong!',
+              widget: TextButton(
+                  onPressed: () {
+                    Get.back();
+                  },
+                  child: Text('Oke')))
+          .show();
       print("DATA STOK ${res.body}");
     }
   }
 
+  Future<void> refreshData() async {
+    loading = true;
+    await Future.delayed(Duration(seconds: 2));
+    _currentPage += 1;
+    var res = await Network().getDataStock('/analisis/$_currentPage');
+    var data = json.decode(res.body);
+    if (data != []) {
+      analisisModel.addAll((data as List).map((e) => StokModel.fromJson(e)));
+      update();
+    } else {
+      analisisModel.clear();
+      _currentPage = 0;
+      loading = false;
+      update();
+    }
+    print("DATA 2 ${analisisModel}");
+    loading = false;
+  }
+
+  loadMore() async {
+    print("LOAD MORE");
+    scrollController.addListener(() async {
+      double offset = 0.9 * scrollController.position.maxScrollExtent;
+      if (scrollController.position.pixels > offset) {
+        loading = true;
+        _currentPage += 1;
+        var res = await Network().getDataStock('/analisis/$_currentPage');
+        var data = json.decode(res.body);
+        analisisModel.addAll((data as List).map((e) => StokModel.fromJson(e)));
+        update();
+        print("DATA 2 ${analisisModel}");
+        loading = false;
+      }
+    });
+  }
+
   void getDetailAnalisis(int id, BuildContext context) async {
     print(id);
-    var res = await Network().getData("/analisis/$id");
+    var res = await Network().getData("/analisis-detail/$id");
     var bodi = json.decode(res.body);
     DialogHelper.loading(context, content: 'Mohon menunggu').show();
     if (bodi != []) {

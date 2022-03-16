@@ -73,17 +73,30 @@ class UpdatePassword extends GetView<PasswordController> {
                               height: 30,
                             ),
                             Container(
-                              child: TextFormField(
-                                decoration: ThemeHelper().textInputDecoration(
-                                    'Password lama',
-                                    'Enter your Password lama'),
-                                validator: (val) {
-                                  if (val!.isNotEmpty) {
-                                    controller.passLama.value = val;
-                                  } else {
-                                    return 'Enter Your Password lama';
-                                  }
-                                },
+                              child: Obx(
+                                () => TextFormField(
+                                  obscureText: controller.visible.value,
+                                  decoration: ThemeHelper()
+                                      .textInputPasswordDecoration(
+                                          lableText: 'Password',
+                                          hintText: 'Masukkan Password Lama',
+                                          onTap: () {
+                                            controller.hidePass();
+                                          },
+                                          icon: Icon(
+                                              controller.visible.value
+                                                  ? Icons.visibility
+                                                  : Icons.visibility_off,
+                                              color: Theme.of(context)
+                                                  .primaryColorDark)),
+                                  validator: (val) {
+                                    if (val!.isNotEmpty) {
+                                      controller.passLama.value = val;
+                                    } else {
+                                      return 'Enter Your Password lama';
+                                    }
+                                  },
+                                ),
                               ),
                               decoration:
                                   ThemeHelper().inputBoxDecorationShaddow(),
@@ -92,17 +105,30 @@ class UpdatePassword extends GetView<PasswordController> {
                               height: 30,
                             ),
                             Container(
-                              child: TextFormField(
-                                decoration: ThemeHelper().textInputDecoration(
-                                    'Password baru',
-                                    'Enter your password baru'),
-                                validator: (val) {
-                                  if (val!.isNotEmpty) {
-                                    controller.passBaru.value = val;
-                                  } else {
-                                    return 'Enter Your password baru';
-                                  }
-                                },
+                              child: Obx(
+                                () => TextFormField(
+                                  obscureText: controller.visibleBaru.value,
+                                  decoration: ThemeHelper()
+                                      .textInputPasswordDecoration(
+                                          lableText: 'Password Baru',
+                                          hintText: 'Masukkan Password Baru',
+                                          onTap: () {
+                                            controller.hidePassbaru();
+                                          },
+                                          icon: Icon(
+                                              controller.visibleBaru.value
+                                                  ? Icons.visibility
+                                                  : Icons.visibility_off,
+                                              color: Theme.of(context)
+                                                  .primaryColorDark)),
+                                  validator: (val) {
+                                    if (val!.isNotEmpty) {
+                                      controller.passBaru.value = val;
+                                    } else {
+                                      return 'Enter Your password baru';
+                                    }
+                                  },
+                                ),
                               ),
                               decoration:
                                   ThemeHelper().inputBoxDecorationShaddow(),
@@ -111,18 +137,30 @@ class UpdatePassword extends GetView<PasswordController> {
                               height: 30,
                             ),
                             Container(
-                              child: TextFormField(
-                                decoration: ThemeHelper().textInputDecoration(
-                                    'Password baru ulang',
-                                    'Enter your password baru ulangi'),
-                                validator: (val) {
-                                  if (val!.isNotEmpty) {
-                                    controller.passBaruUlang.value = val;
-                                  } else {
-                                    return 'Enter Your password baru ulang';
-                                  }
-                                },
-                              ),
+                              child: Obx(() => TextFormField(
+                                    obscureText: controller.visibleUlang.value,
+                                    decoration: ThemeHelper()
+                                        .textInputPasswordDecoration(
+                                            lableText: 'Password Baru Ulang',
+                                            hintText:
+                                                'Masukkan Password Baru Ulang',
+                                            onTap: () {
+                                              controller.hidePassbaruUlang();
+                                            },
+                                            icon: Icon(
+                                                controller.visibleUlang.value
+                                                    ? Icons.visibility
+                                                    : Icons.visibility_off,
+                                                color: Theme.of(context)
+                                                    .primaryColorDark)),
+                                    validator: (val) {
+                                      if (val!.isNotEmpty) {
+                                        controller.passBaruUlang.value = val;
+                                      } else {
+                                        return 'Enter Your password baru ulang';
+                                      }
+                                    },
+                                  )),
                               decoration:
                                   ThemeHelper().inputBoxDecorationShaddow(),
                             ),
@@ -150,7 +188,7 @@ class UpdatePassword extends GetView<PasswordController> {
                                     )),
                                 onPressed: () {
                                   if (_formKey.currentState!.validate()) {
-                                    controller.changePassword();
+                                    controller.changePassword(context);
                                   }
                                 },
                               ),

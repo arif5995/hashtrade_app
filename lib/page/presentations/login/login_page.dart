@@ -69,20 +69,32 @@ class LoginPage extends GetView<LoginController> {
                               ),
                               SizedBox(height: 30.0),
                               Container(
-                                child: TextFormField(
-                                    obscureText: true,
-                                    decoration: ThemeHelper()
-                                        .textInputDecoration(
-                                            'Password', 'Masukan password'),
-                                    validator: (String? passwordValue) {
-                                      if (passwordValue != null &&
-                                          passwordValue.isEmpty) {
-                                        return 'Please enter your password';
-                                      }
-                                      controller.password.value =
-                                          passwordValue!;
-                                      return null;
-                                    }),
+                                child: Obx(
+                                  () => TextFormField(
+                                      obscureText: controller.visible.value,
+                                      decoration: ThemeHelper()
+                                          .textInputPasswordDecoration(
+                                              lableText: 'Password',
+                                              hintText: 'Masukkan Password',
+                                              onTap: () {
+                                                controller.hidePass();
+                                              },
+                                              icon: Icon(
+                                                  controller.visible.value
+                                                      ? Icons.visibility
+                                                      : Icons.visibility_off,
+                                                  color: Theme.of(context)
+                                                      .primaryColorDark)),
+                                      validator: (String? passwordValue) {
+                                        if (passwordValue != null &&
+                                            passwordValue.isEmpty) {
+                                          return 'Please enter your password';
+                                        }
+                                        controller.password.value =
+                                            passwordValue!;
+                                        return null;
+                                      }),
+                                ),
                                 decoration:
                                     ThemeHelper().inputBoxDecorationShaddow(),
                               ),

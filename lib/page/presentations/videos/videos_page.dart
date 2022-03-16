@@ -15,67 +15,72 @@ class VideosPage extends GetView<VideosController> {
         body: SafeArea(
             child: GetBuilder<VideosController>(
       initState: (_) {
-        controller.getVideo();
+        controller.getVideo(context);
       },
       builder: (controller) {
         return controller.loading
-            ? Center(child: CircularProgressIndicator())
+            ? Center(
+                child: CupertinoActivityIndicator(),
+              )
             : Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: ListView.builder(
-                  itemCount: controller.dataVideo.length,
-                  itemBuilder: (BuildContext ctx, index) {
-                    var dataVideo = controller.dataVideo[index];
-                    return Card(
-                      child: ListTile(
-                        leading: dataVideo.data_values!.descriptionNic != ""
-                            ? CachedNetworkImage(
-                                imageUrl: ConstantHelper
-                                        .IMAGE_NETWORK_VIDEO_FRONTEND +
-                                    dataVideo.data_values!.image!,
-                                progressIndicatorBuilder:
-                                    (context, url, downloadProgress) =>
-                                        Container(
-                                            height: 50,
-                                            width: 50,
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(5)),
-                                            ),
-                                            child: CupertinoActivityIndicator(
-                                                color: Colors.blue)),
-                                imageBuilder: (context, imageProvider) =>
-                                    Container(
-                                      height: 60,
-                                      width: 100,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(5)),
-                                        border: Border.all(
-                                            width: 1, color: Colors.white),
-                                        image: DecorationImage(
-                                          image: imageProvider,
-                                          fit: BoxFit.cover,
+                child: RefreshIndicator(
+                  onRefresh: controller.refreshVideos,
+                  child: ListView.builder(
+                    itemCount: controller.dataVideo.length,
+                    itemBuilder: (BuildContext ctx, index) {
+                      var dataVideo = controller.dataVideo[index];
+                      return Card(
+                        child: ListTile(
+                          leading: dataVideo.data_values!.descriptionNic != ""
+                              ? CachedNetworkImage(
+                                  imageUrl: ConstantHelper
+                                          .IMAGE_NETWORK_VIDEO_FRONTEND +
+                                      dataVideo.data_values!.image!,
+                                  progressIndicatorBuilder:
+                                      (context, url, downloadProgress) =>
+                                          Container(
+                                              height: 50,
+                                              width: 50,
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(5)),
+                                              ),
+                                              child: CupertinoActivityIndicator(
+                                                  color: Colors.blue)),
+                                  imageBuilder: (context, imageProvider) =>
+                                      Container(
+                                        height: 60,
+                                        width: 100,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(5)),
+                                          border: Border.all(
+                                              width: 1, color: Colors.white),
+                                          image: DecorationImage(
+                                            image: imageProvider,
+                                            fit: BoxFit.cover,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                errorWidget: (context, url, error) => Icon(
-                                      Icons.person,
-                                      size: 30,
-                                      color: Colors.grey,
-                                    ))
-                            : Image.asset('assets/imagenotfound.png'),
-                        title: Text(dataVideo.data_values!.title!),
-                        trailing: Text(dataVideo.data_values!.catatan!),
-                        onTap: () {
-                          controller.getDetailVideo(dataVideo.id!, context);
-                        },
-                        subtitle: Text(''),
-                      ),
-                    );
-                  },
+                                  errorWidget: (context, url, error) => Icon(
+                                        Icons.person,
+                                        size: 30,
+                                        color: Colors.grey,
+                                      ))
+                              : Image.asset('assets/imagenotfound.png'),
+                          title: Text(dataVideo.data_values!.title!),
+                          trailing: Text(dataVideo.data_values!.catatan!),
+                          onTap: () {
+                            controller.getDetailVideo(dataVideo.id!, context);
+                          },
+                          subtitle: Text(''),
+                        ),
+                      );
+                    },
+                  ),
                 ),
               );
       },

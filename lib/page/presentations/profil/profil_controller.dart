@@ -88,7 +88,7 @@ class ProfilController extends GetxController {
       'firstname': user.firstname,
       'lastname': user.lastname,
       'email': user.email,
-      'mobile': "62${user.mobile}",
+      'mobile': user.mobile,
       'address': user.address,
     };
 

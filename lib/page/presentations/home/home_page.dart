@@ -10,6 +10,7 @@ import 'package:hastrade/page/presentations/home/home_controller.dart';
 import 'package:hastrade/page/presentations/news/controller/news_controller.dart';
 import 'package:hastrade/page/presentations/stock/controller/stock_controller.dart';
 import 'package:hastrade/page/presentations/stock/stok_now_page.dart';
+import 'package:hastrade/page/presentations/videos/controller/videos_controller.dart';
 
 import '../../../network/api.dart';
 import '../stock/binding/stock_binding.dart';
@@ -29,6 +30,7 @@ class _HomePageState extends State<HomePage> {
   final stokController = Get.put(StockController());
   final analisisController = Get.put(AnalisisController());
   final newsController = Get.put(NewsController());
+  final videosController = Get.put(VideosController());
 
   List _loadedBlog = [];
   List _loadedVideo = [];
@@ -342,17 +344,10 @@ class _HomePageState extends State<HomePage> {
         ),
         itemCount: _loadedVideo.length,
         itemBuilder: (BuildContext ctx, index) {
+          var id = _loadedVideo[index]['id'];
           return _loadedBlog.length == 0
               ? Center(child: CircularProgressIndicator())
               : GestureDetector(
-                  onTap: () {
-                    var id = _loadedVideo[index]['id'];
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    // builder: (context) => HalamanVideoDetail(id: id)),
-                    // );
-                  },
                   child: Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
@@ -364,6 +359,9 @@ class _HomePageState extends State<HomePage> {
                                   _loadedVideo[index]['data_values']["image"])),
                     ),
                   ),
+                  onTap: () {
+                    videosController.getDetailVideo(id, context);
+                  },
                 );
         });
   }

@@ -39,9 +39,13 @@ class DialogHelper {
   }
 
   static StylishDialog warning(BuildContext context,
-      {String title = "", String content = "", Widget? widget}) {
+      {String title = "",
+      String content = "",
+      Widget? widget,
+      bool touch = true}) {
     StylishDialog dialog = StylishDialog(
         context: context,
+        dismissOnTouchOutside: touch,
         alertType: StylishDialogType.WARNING,
         titleText: title,
         contentText: content,

@@ -7,8 +7,7 @@ import 'package:get/get.dart';
 import 'package:hastrade/common/helper/dialog_helper.dart';
 import 'package:hastrade/page/presentations/password/new_password_page.dart';
 import 'package:hastrade/page/presentations/password/password_binding.dart';
-import 'package:hastrade/page/presentations/profil/profil_binding.dart';
-import 'package:hastrade/page/presentations/profil/profil_page.dart';
+import 'package:hastrade/page/presentations/profil/profil_controller.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stylish_dialog/stylish_dialog.dart';
@@ -18,6 +17,7 @@ import '../login/login_page.dart';
 import 'forgot_password_verirfy_page.dart';
 
 class PasswordController extends GetxController {
+  final profilController = Get.put(ProfilController());
   var pinSukses = false.obs;
   var passLama = "".obs;
   var passBaru = "".obs;
@@ -29,6 +29,9 @@ class PasswordController extends GetxController {
   var _startTime = 60.obs;
   var resendCode = false.obs;
   late Timer _timer;
+  var visible = true.obs;
+  var visibleBaru = true.obs;
+  var visibleUlang = true.obs;
 
   @override
   void onInit() {
@@ -36,7 +39,23 @@ class PasswordController extends GetxController {
     print("TIMER");
   }
 
+  void hidePass() {
+    visible.value = !visible.value;
+    print(visible);
+  }
+
+  void hidePassbaru() {
+    visibleBaru.value = !visibleBaru.value;
+    print(visibleBaru);
+  }
+
+  void hidePassbaruUlang() {
+    visibleUlang.value = !visibleUlang.value;
+    print(visibleUlang);
+  }
+
   void timerKode() {
+    _startTime.value = 60;
     Timer.periodic(Duration(seconds: 1), (timer) {
       print("TIMER 1 ${_startTime.value}");
       if (_startTime.value == 0) {
@@ -59,6 +78,7 @@ class PasswordController extends GetxController {
   void verifyKode() async {}
 
   void resendCoder(BuildContext context) async {
+    DialogHelper.loading(context, content: 'Mohon menunggu').show();
     var data = {'no_hp': "62${noTelpVerify.value}"};
 
     print('NO $data');
@@ -67,7 +87,23 @@ class PasswordController extends GetxController {
 
     print('NO TELP 1 $body ${noTelpVerify.value}');
     if (res.statusCode == 200 && body['success'] == 'true') {
+      DialogHelper.loading(context, content: 'Mohon menunggu').dismiss();
       print('NO TELP $body ${noTelpVerify.value}');
+      StylishDialog(
+        context: context,
+        alertType: StylishDialogType.SUCCESS,
+        titleText: 'Perhatian',
+        contentText: body['message'],
+        confirmButton: TextButton(
+          onPressed: () {
+            timerKode();
+            Get.back();
+          },
+          child: Text('Ya'),
+        ),
+      ).show();
+    } else {
+      DialogHelper.loading(context, content: 'Mohon menunggu').dismiss();
       StylishDialog(
         context: context,
         alertType: StylishDialogType.SUCCESS,
@@ -80,7 +116,6 @@ class PasswordController extends GetxController {
           child: Text('Ya'),
         ),
       ).show();
-    } else {
       print('GAGAL SIMPAN NO');
     }
   }
@@ -147,6 +182,7 @@ class PasswordController extends GetxController {
 
   void sendPin(String val, BuildContext context,
       OtpFieldController otpFieldController) async {
+    DialogHelper.loading(context, content: 'Mohon menunggu').show();
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setString('kode_aktivasi', val);
     var data = {'kode_aktivasi': val, 'no_hp': "62" + noTelpVerify.value};
@@ -156,8 +192,10 @@ class PasswordController extends GetxController {
       print('PIN ${body} dan ${data} ');
       if (res.statusCode == 200 && body['success'] == 'true') {
         pinSukses.value = true;
+        DialogHelper.loading(context, content: 'Mohon menunggu').dismiss();
         Get.to(NewPasswordPage(), binding: PasswordBinding());
       } else {
+        DialogHelper.loading(context, content: 'Mohon menunggu').dismiss();
         StylishDialog(
           context: context,
           alertType: StylishDialogType.WARNING,
@@ -197,6 +235,7 @@ class PasswordController extends GetxController {
       if (res.statusCode == 200 && body['success'] == 'true') {
         print('FORGOT $body');
         proses.value = false;
+        DialogHelper.loading(context, content: "Update password").dismiss();
         DialogHelper.sukses(context,
                 content: "Update password berhasil",
                 widget: TextButton(
@@ -206,6 +245,8 @@ class PasswordController extends GetxController {
                     child: Text("Oke")))
             .show();
       } else {
+        proses.value = false;
+        DialogHelper.loading(context, content: "Update password").dismiss();
         DialogHelper.warning(context,
                 title: 'Perhatian',
                 content: "Cek kembali password anda",
@@ -220,6 +261,8 @@ class PasswordController extends GetxController {
       }
       print('GAGAL PASS');
     } catch (e) {
+      proses.value = false;
+      DialogHelper.loading(context, content: "Update password").dismiss();
       DialogHelper.error(context,
               title: 'Perhatian',
               content: "Terjadi kesalahan!",
@@ -234,8 +277,9 @@ class PasswordController extends GetxController {
     }
   }
 
-  void changePassword() async {
+  void changePassword(BuildContext context) async {
     proses.value = true;
+    DialogHelper.loading(context, content: 'Mohon menunggu').show();
     var data = {
       'password_lama': passLama.value,
       'password_baru': passBaru.value,
@@ -247,12 +291,33 @@ class PasswordController extends GetxController {
 
     if (body['success'] == 'true') {
       print('PAS ${body}');
+      DialogHelper.loading(context, content: 'Mohon menunggu').dismiss();
       proses.value = false;
       result.value = true;
-      Get.to(ProfilPage(), binding: ProfilBinding());
+      DialogHelper.sukses(context,
+              title: "Terima kasih",
+              content: 'Password berhasil diubah',
+              widget: TextButton(
+                  onPressed: () {
+                    Get.back();
+                    Get.back();
+                    profilController.getDataProfil();
+                  },
+                  child: Text('Oke')))
+          .show();
     } else {
       proses.value = false;
       result.value = false;
+      DialogHelper.loading(context, content: 'Mohon menunggu').dismiss();
+      DialogHelper.warning(context,
+              title: "Perhatian",
+              content: 'Cek Kembali Password Anda',
+              widget: TextButton(
+                  onPressed: () {
+                    Get.back();
+                  },
+                  child: Text('Oke')))
+          .show();
       print('GAGAL UPDATE');
     }
     result.value = false;

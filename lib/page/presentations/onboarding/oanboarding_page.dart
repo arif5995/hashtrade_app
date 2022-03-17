@@ -55,7 +55,7 @@ class OnBoardingPage extends GetView<OnboardingController> {
           dotsDecorator: getDotDecoration(),
           onChange: (index) => print('Page $index selected'),
           globalBackgroundColor: Theme.of(context).bottomAppBarColor,
-          skipFlex: 0,
+          skipOrBackFlex: 0,
           nextFlex: 0,
           // isProgressTap: false,
           // isProgress: false,
@@ -85,7 +85,7 @@ class OnBoardingPage extends GetView<OnboardingController> {
   PageDecoration getPageDecoration() => PageDecoration(
         titleTextStyle: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
         bodyTextStyle: TextStyle(fontSize: 20),
-        descriptionPadding: EdgeInsets.all(16).copyWith(bottom: 0),
+        bodyPadding: EdgeInsets.all(16).copyWith(bottom: 0),
         imagePadding: EdgeInsets.all(24),
         pageColor: Colors.white,
       );

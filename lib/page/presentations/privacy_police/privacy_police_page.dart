@@ -21,17 +21,7 @@ class PrivacyPolicePage extends GetView<PrivacyController> {
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      data!.title!,
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Html(data: data.details!)
-                  ],
+                  children: [Html(data: data?.details!)],
                 ),
               );
             },

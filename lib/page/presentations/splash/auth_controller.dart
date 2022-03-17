@@ -12,7 +12,6 @@ class AuthController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-
     Future.delayed(Duration(milliseconds: 10), () {
       isVisible.value =
           true; // Now it is showing fade effect and navigating to Login page

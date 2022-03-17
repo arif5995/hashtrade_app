@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:hastrade/page/presentations/analisis/controller/analisis_controller.dart';
 
 import '../../../common/helper/constant_helper.dart';
+import '../../../common/helper/parse_helper.dart';
 
 class AnalisisDetailPage extends GetView<AnalisisController> {
   const AnalisisDetailPage({Key? key}) : super(key: key);
@@ -13,7 +14,7 @@ class AnalisisDetailPage extends GetView<AnalisisController> {
     return Scaffold(
       appBar: AppBar(
         title: Obx(() => Text(
-            "Detail Stock ${controller.detailAnalisis[0].data_values!.title!}")),
+            "Detail Analis ${controller.detailAnalisis[0].data_values!.title!}")),
       ),
       body: ListView.builder(
           itemCount: controller.detailAnalisis.length,
@@ -29,6 +30,20 @@ class AnalisisDetailPage extends GetView<AnalisisController> {
                       SizedBox(
                         height: 10,
                       ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("Tanggal : "),
+                          Text(ParseHelper.parseDate(data.createdAt!)),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("Jam : "),
+                          Text(ParseHelper.parseTime(data.createdAt!)),
+                        ],
+                      ),
                       Container(
                         height: 250,
                         decoration: BoxDecoration(
@@ -40,7 +55,7 @@ class AnalisisDetailPage extends GetView<AnalisisController> {
                                         data.data_values!.image!)
                                     : AssetImage('assets/imagenotfound.png')
                                         as ImageProvider,
-                                fit: BoxFit.cover)),
+                                fit: BoxFit.fill)),
                       ),
                       Container(
                         child: Html(

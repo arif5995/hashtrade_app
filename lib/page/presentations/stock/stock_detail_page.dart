@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
 import 'package:hastrade/common/helper/constant_helper.dart';
+import 'package:hastrade/common/helper/parse_helper.dart';
 import 'package:hastrade/page/presentations/stock/controller/stock_controller.dart';
 
 class StockDetailPage extends GetView<StockController> {
@@ -28,6 +29,20 @@ class StockDetailPage extends GetView<StockController> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
+                          Text("Tanggal : "),
+                          Text(ParseHelper.parseDate(data.createdAt!)),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("Jam : "),
+                          Text(ParseHelper.parseTime(data.createdAt!)),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
                           Text("Status : "),
                           Text(data.data_values!.catatan!),
                         ],
@@ -46,7 +61,10 @@ class StockDetailPage extends GetView<StockController> {
                                         data.data_values!.image!)
                                     : AssetImage('assets/imagenotfound.png')
                                         as ImageProvider,
-                                fit: BoxFit.cover)),
+                                fit: BoxFit.fill)),
+                      ),
+                      SizedBox(
+                        height: 10,
                       ),
                       Container(
                         child: Html(

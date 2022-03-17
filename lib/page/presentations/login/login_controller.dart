@@ -8,6 +8,7 @@ import 'package:hastrade/page/presentations/dashboard/dashboard_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../network/api.dart';
+import '../../data/models/sosmed_model.dart';
 
 class LoginController extends GetxController {
   var isLoading = false.obs;
@@ -15,10 +16,32 @@ class LoginController extends GetxController {
   var password = ''.obs;
   var msg = ''.obs;
   var visible = true.obs;
+  var sosmed = <Sosmed>[].obs;
+  var load = false.obs;
+
+  @override
+  void onInit() {
+    // TODO: implement onInit
+    super.onInit();
+    sosmedia();
+  }
 
   void hidePass() {
     visible.value = !visible.value;
     print(visible);
+  }
+
+  void sosmedia() async {
+    load.value = true;
+    var res = await Network().getData('/sosmed');
+    var bodi = json.decode(res.body);
+    print('SOSMED $bodi');
+    if (bodi != []) {
+      sosmed.value =
+          (bodi as List).map((data) => Sosmed.fromJson(data)).toList();
+      load.value = false;
+      // Map<String, dynamic> data
+    }
   }
 
   void Login(BuildContext context) async {

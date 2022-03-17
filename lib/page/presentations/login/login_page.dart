@@ -1,9 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:hastrade/page/presentations/login/login_controller.dart';
 import 'package:hastrade/page/presentations/password/forgot_pasword_page.dart';
 import 'package:hastrade/page/presentations/password/password_binding.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../common/theme_helper.dart';
 import '../../widgets/header_widget.dart';
@@ -163,6 +165,64 @@ class LoginPage extends GetView<LoginController> {
                               ),
                             ],
                           )),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Divider(
+                        thickness: 1,
+                        height: 1,
+                        color: Colors.grey,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          IconButton(
+                              onPressed: () async {
+                                await link(
+                                    controller.sosmed[0].dataValues!.url!);
+                              },
+                              icon: FaIcon(
+                                FontAwesomeIcons.whatsapp,
+                                color: Colors.green,
+                              )),
+                          IconButton(
+                              onPressed: () async {
+                                await link(
+                                    controller.sosmed[1].dataValues!.url!);
+                              },
+                              icon: FaIcon(
+                                FontAwesomeIcons.instagram,
+                                color: Colors.redAccent,
+                              )),
+                          IconButton(
+                              onPressed: () async {
+                                await link(
+                                    controller.sosmed[2].dataValues!.url!);
+                              },
+                              icon: FaIcon(
+                                FontAwesomeIcons.twitter,
+                                color: Colors.blue,
+                              )),
+                          IconButton(
+                              onPressed: () async {
+                                await link(
+                                    controller.sosmed[3].dataValues!.url!);
+                              },
+                              icon: FaIcon(
+                                FontAwesomeIcons.youtube,
+                                color: Colors.redAccent,
+                              )),
+                          IconButton(
+                              onPressed: () async {
+                                await link(
+                                    controller.sosmed[4].dataValues!.url!);
+                              },
+                              icon: FaIcon(
+                                FontAwesomeIcons.facebook,
+                                color: Colors.blue,
+                              )),
+                        ],
+                      )
                     ],
                   )),
             ),
@@ -170,5 +230,13 @@ class LoginPage extends GetView<LoginController> {
         ),
       ),
     );
+  }
+
+  Future link(String url) async {
+    if (await canLaunch(url)) {
+      print("WEB ${controller.sosmed[0].dataValues?.url}");
+      launch(url,
+          forceSafariVC: false, forceWebView: false, enableJavaScript: true);
+    }
   }
 }

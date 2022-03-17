@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:hastrade/page/presentations/login/login_controller.dart';
 import 'package:hastrade/page/presentations/login/login_page.dart';
 import 'package:hastrade/page/presentations/register/register_%20controller.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../common/theme_helper.dart';
 import '../../widgets/header_widget.dart';
@@ -14,6 +17,7 @@ class RegisterPage extends GetView<RegisterController> {
   @override
   Widget build(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
+    final loginCont = Get.put(LoginController());
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -194,7 +198,7 @@ class RegisterPage extends GetView<RegisterController> {
                                           }),
                                     ),
                                     Text(
-                                      "I accept all terms and conditions.",
+                                      "Anda harus menerima persyaratan dan ketentuan yang berlaku",
                                       style: TextStyle(color: Colors.grey),
                                     ),
                                   ],
@@ -216,7 +220,7 @@ class RegisterPage extends GetView<RegisterController> {
                           validator: (value) {
                             print("Val $value");
                             if (controller.checkBox.value == false) {
-                              return 'You need to accept terms and conditions';
+                              return 'Anda harus menerima persyaratan dan ketentuan yang berlaku';
                             }
                           },
                         ),
@@ -250,7 +254,7 @@ class RegisterPage extends GetView<RegisterController> {
                         ),
                         SizedBox(height: 30.0),
                         Text(
-                          "Or sign in if you have account on HasTrade",
+                          "atau masuk jika andau sudah memilik akun",
                           style: TextStyle(color: Colors.grey),
                         ),
                         SizedBox(height: 25.0),
@@ -273,6 +277,59 @@ class RegisterPage extends GetView<RegisterController> {
                       ],
                     ),
                   ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Divider(
+                    thickness: 1,
+                    height: 1,
+                    color: Colors.grey,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                          onPressed: () async {
+                            await link(loginCont.sosmed[0].dataValues!.url!);
+                          },
+                          icon: FaIcon(
+                            FontAwesomeIcons.whatsapp,
+                            color: Colors.green,
+                          )),
+                      IconButton(
+                          onPressed: () async {
+                            await link(loginCont.sosmed[1].dataValues!.url!);
+                          },
+                          icon: FaIcon(
+                            FontAwesomeIcons.instagram,
+                            color: Colors.redAccent,
+                          )),
+                      IconButton(
+                          onPressed: () async {
+                            await link(loginCont.sosmed[2].dataValues!.url!);
+                          },
+                          icon: FaIcon(
+                            FontAwesomeIcons.twitter,
+                            color: Colors.blue,
+                          )),
+                      IconButton(
+                          onPressed: () async {
+                            await link(loginCont.sosmed[3].dataValues!.url!);
+                          },
+                          icon: FaIcon(
+                            FontAwesomeIcons.youtube,
+                            color: Colors.redAccent,
+                          )),
+                      IconButton(
+                          onPressed: () async {
+                            await link(loginCont.sosmed[4].dataValues!.url!);
+                          },
+                          icon: FaIcon(
+                            FontAwesomeIcons.facebook,
+                            color: Colors.blue,
+                          )),
+                    ],
+                  )
                 ],
               ),
             ),
@@ -280,5 +337,12 @@ class RegisterPage extends GetView<RegisterController> {
         ),
       ),
     );
+  }
+
+  Future link(String url) async {
+    if (await canLaunch(url)) {
+      launch(url,
+          forceSafariVC: false, forceWebView: false, enableJavaScript: true);
+    }
   }
 }

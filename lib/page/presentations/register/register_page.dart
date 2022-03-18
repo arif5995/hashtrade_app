@@ -198,7 +198,7 @@ class RegisterPage extends GetView<RegisterController> {
                                           }),
                                     ),
                                     Text(
-                                      "Anda harus menerima persyaratan dan ketentuan yang berlaku",
+                                      "Anda harus menerima persyaratan\ndan ketentuan yang berlaku",
                                       style: TextStyle(color: Colors.grey),
                                     ),
                                   ],

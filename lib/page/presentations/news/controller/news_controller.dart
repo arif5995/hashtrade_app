@@ -70,16 +70,17 @@ class NewsController extends GetxController {
   Future refreshNews() async {
     loading = true;
     await Future.delayed(Duration(seconds: 2));
-    _currentPage += 1;
+    _currentPage += 5;
     var res = await Network().getDataStock('/blog/$_currentPage');
     var data = json.decode(res.body);
-    if (data != []) {
+    if ((data as List).isNotEmpty) {
       loading = false;
       newsModel.addAll((data as List).map((e) => StokModel.fromJson(e)));
       update();
     } else {
       newsModel.clear();
-      var res = await Network().getDataStock('/blog/0');
+      _currentPage = 0;
+      var res = await Network().getDataStock('/blog/$_currentPage');
       var data = json.decode(res.body);
       newsModel.addAll((data as List).map((e) => StokModel.fromJson(e)));
       loading = false;

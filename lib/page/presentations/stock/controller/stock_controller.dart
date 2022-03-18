@@ -14,7 +14,7 @@ import '../../../../network/api.dart';
 class StockController extends GetxController {
   var data = [].obs;
   var loading = false;
-  List<StokModel> stokModel = <StokModel>[].obs;
+  var stokModel = <StokModel>[].obs;
   var stokModelfront = <StokModel>[].obs;
   var analisisModelfront = <StokModel>[].obs;
   var detailStok = <StokModel>[].obs;
@@ -31,25 +31,32 @@ class StockController extends GetxController {
 
   Future refreshStok() async {
     loading = true;
-    await Future.delayed(Duration(seconds: 2));
-    _currentPage += 1;
+    stokModel.clear();
+    _currentPage += 5;
     var res = await Network().getDataStock('/stok/$_currentPage');
     var data = json.decode(res.body);
-    if (data != []) {
-      detailStok.addAll((data as List).map((e) => StokModel.fromJson(e)));
+    print("page $data");
+    if ((data as List).isNotEmpty) {
+      stokModel.addAll((data as List).map((e) => StokModel.fromJson(e)));
       update();
+      print("page 1 $_currentPage");
     } else {
-      detailStok.clear();
+      stokModel.clear();
       _currentPage = 0;
+      var res = await Network().getDataStock('/stok/$_currentPage');
+      var data = json.decode(res.body);
+      stokModel.addAll((data as List).map((e) => StokModel.fromJson(e)));
       loading = false;
       update();
+      print("DATA STOK $detailStok");
     }
-    print("DATA 2 $_currentPage " "${detailStok}");
+    print("DATA 3 $_currentPage " "${stokModel}");
     loading = false;
   }
 
   void getStock(BuildContext context) async {
     loading = true;
+    _currentPage = 0;
     var res = await Network().getDataStock('/stok/0');
     var data = json.decode(res.body);
     print('STOK ${json.decode(res.body)}');
@@ -57,7 +64,7 @@ class StockController extends GetxController {
     if (res.statusCode == 200) {
       loading = false;
       update();
-      stokModel = (data as List).map((e) => StokModel.fromJson(e)).toList();
+      stokModel.addAll((data as List).map((e) => StokModel.fromJson(e)));
       print("DATA 1 ${stokModel}");
     } else {
       loading = false;

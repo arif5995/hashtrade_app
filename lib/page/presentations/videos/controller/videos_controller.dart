@@ -53,17 +53,19 @@ class VideosController extends GetxController {
 
   Future refreshVideos() async {
     loading = true;
-    await Future.delayed(Duration(seconds: 2));
-    _currentPage += 1;
+    _currentPage += 5;
     var res = await Network().getDataStock('/video/$_currentPage');
     var data = json.decode(res.body);
-    if (data != []) {
+    if ((data as List).isNotEmpty) {
       loading = false;
       dataVideo.addAll((data as List).map((e) => StokModel.fromJson(e)));
       update();
     } else {
       dataVideo.clear();
       _currentPage = 0;
+      var res = await Network().getDataStock('/video/$_currentPage');
+      var data = json.decode(res.body);
+      dataVideo.addAll((data as List).map((e) => StokModel.fromJson(e)));
       loading = false;
       update();
     }

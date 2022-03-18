@@ -66,19 +66,23 @@ class AnalisisController extends GetxController {
   Future<void> refreshData() async {
     loading = true;
     await Future.delayed(Duration(seconds: 2));
-    _currentPage += 1;
+    _currentPage += 5;
     var res = await Network().getDataStock('/analisis/$_currentPage');
     var data = json.decode(res.body);
-    if (data != []) {
+    if ((data as List).isNotEmpty) {
       analisisModel.addAll((data as List).map((e) => StokModel.fromJson(e)));
       update();
     } else {
       analisisModel.clear();
       _currentPage = 0;
+      var res = await Network().getDataStock('/analisis/$_currentPage');
+      var data = json.decode(res.body);
+      analisisModel.addAll((data as List).map((e) => StokModel.fromJson(e)));
       loading = false;
       update();
+      print("analisis 2 ${analisisModel}");
     }
-    print("DATA 2 ${analisisModel}");
+
     loading = false;
   }
 

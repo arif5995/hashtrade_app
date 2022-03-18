@@ -32,10 +32,7 @@ dependencies:
   video_player:
   intl:
   url_launcher:
-  firebase_messaging: ^11.2.11
-  firebase_core:
-  flutter_math_fork: ^0.5.0
-
+  firebase_messaging:
 
 dev_dependencies:
   flutter_launcher_icons:
@@ -53,5 +50,8 @@ flutter:
 
   assets:
     - assets/
-    - assets/logoHastrade.png
-    - assets/textHasTrade.png
+
+  fonts:
+    - family:  MyFlutterApp
+      fonts:
+        - asset: assets/fonts/MyFlutterApp.ttf

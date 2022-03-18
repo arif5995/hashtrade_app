@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hastrade/page/presentations/password/password_controller.dart';
+import 'package:hastrade/page/widgets/my_flutter_app_icons.dart';
 
 import '../../../common/theme_helper.dart';
 import '../../widgets/header_widget.dart';
@@ -23,7 +24,7 @@ class ForgotPasswordPage extends GetView<PasswordController> {
               Container(
                 height: _headerHeight,
                 child:
-                    HeaderWidget(_headerHeight, true, Icons.password_rounded),
+                    HeaderWidget(_headerHeight, true, MyFlutterApp.logohastrade),
               ),
               SafeArea(
                 child: Container(

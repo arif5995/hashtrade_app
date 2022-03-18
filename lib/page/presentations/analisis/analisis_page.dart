@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hastrade/common/helper/constant_helper.dart';
+import '../../../common/helper/parse_helper.dart';
 import 'package:hastrade/page/presentations/analisis/controller/analisis_controller.dart';
 
 class AnalisisPage extends GetView<AnalisisController> {
@@ -38,7 +39,7 @@ class AnalisisPage extends GetView<AnalisisController> {
                             controller.getDetailAnalisis(
                                 controller.analisisModel[index].id!, context);
                           },
-                          subtitle: Text(''),
+                          subtitle: Text(ParseHelper.parseDate(dataStock.createdAt!) +' '+ ParseHelper.parseTime(dataStock.createdAt!),textAlign: TextAlign.left),
                         ),
                       );
                     },

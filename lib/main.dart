@@ -18,15 +18,16 @@ void main() async {
   await Firebase.initializeApp();
   String? token = await FirebaseMessaging.instance.getToken();
   print("FirebaseMessaging token: $token");
+
   runApp(NewMyApp());
 }
 
 class NewMyApp extends StatelessWidget {
   const NewMyApp({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
       initialRoute: SplashPage.routeName,
       getPages: [
         GetPage(

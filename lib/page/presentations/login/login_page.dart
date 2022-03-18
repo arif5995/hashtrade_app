@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:hastrade/page/presentations/login/login_controller.dart';
 import 'package:hastrade/page/presentations/password/forgot_pasword_page.dart';
 import 'package:hastrade/page/presentations/password/password_binding.dart';
+import 'package:hastrade/page/widgets/my_flutter_app_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../common/theme_helper.dart';
@@ -30,7 +31,7 @@ class LoginPage extends GetView<LoginController> {
             Container(
               height: _headerHeight,
               child: HeaderWidget(_headerHeight, true,
-                  Icons.login_rounded), //let's create a common header widget
+                  MyFlutterApp.logohastrade), //let's create a common header widget
             ),
             SafeArea(
               child: Container(

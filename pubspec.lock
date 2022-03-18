@@ -149,7 +149,7 @@ packages:
     source: hosted
     version: "6.1.2"
   firebase_core:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: firebase_core
       url: "https://pub.dartlang.org"
@@ -245,7 +245,7 @@ packages:
     source: hosted
     version: "1.0.6"
   flutter_math_fork:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: flutter_math_fork
       url: "https://pub.dartlang.org"

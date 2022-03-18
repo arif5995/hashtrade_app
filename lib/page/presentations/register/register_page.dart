@@ -6,6 +6,8 @@ import 'package:hastrade/page/presentations/login/login_controller.dart';
 import 'package:hastrade/page/presentations/login/login_page.dart';
 import 'package:hastrade/page/presentations/register/register_%20controller.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:hastrade/page/presentations/privacy_police/privacy_binding.dart';
+import 'package:hastrade/page/presentations/privacy_police/privacy_police_page.dart';
 
 import '../../../common/theme_helper.dart';
 import '../../widgets/header_widget.dart';
@@ -197,10 +199,17 @@ class RegisterPage extends GetView<RegisterController> {
                                             controller.cekBox(value!);
                                           }),
                                     ),
-                                    Text(
-                                      "Anda harus menerima persyaratan\ndan ketentuan yang berlaku",
-                                      style: TextStyle(color: Colors.grey),
+                                    InkWell(
+                                      child: Text(
+                                        "Anda harus menerima persyaratan\ndan ketentuan yang berlaku",
+                                        style: TextStyle(color: Colors.blue),
+                                      ),
+                                        onTap: () {
+                                          Get.to(PrivacyPolicePage(), binding: PrivacyBinding());
+                                          Scaffold.of(context).openDrawer();
+                                        }
                                     ),
+
                                   ],
                                 ),
                                 Container(

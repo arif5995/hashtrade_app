@@ -1,6 +1,7 @@
 // This widget will draw header section of all page. Wich you will get with the project source code.
 
 import 'package:flutter/material.dart';
+import 'my_flutter_app_icons.dart';
 
 class HeaderWidget extends StatefulWidget {
   final double _height;
@@ -115,20 +116,20 @@ class _HeaderWidgetState extends State<HeaderWidget> {
                     right: 5.0,
                     bottom: 20.0,
                   ),
-                  decoration: BoxDecoration(
-                    // borderRadius: BorderRadius.circular(20),
+                  /*decoration: BoxDecoration(
+                    //borderRadius: BorderRadius.circular(20),
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(100),
-                      topRight: Radius.circular(100),
-                      bottomLeft: Radius.circular(60),
-                      bottomRight: Radius.circular(60),
+                      topLeft: Radius.circular(40),
+                      topRight: Radius.circular(40),
+                      bottomLeft: Radius.circular(50),
+                      bottomRight: Radius.circular(50),
                     ),
                     border: Border.all(width: 5, color: Colors.white),
-                  ),
+                  ),*/
                   child: Icon(
                     _icon,
                     color: Colors.white,
-                    size: 40.0,
+                    size: 80.0,
                   ),
                 ),
               ),

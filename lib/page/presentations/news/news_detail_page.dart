@@ -25,12 +25,13 @@ class NewsDetailPage extends GetView<NewsController> {
                   padding: EdgeInsets.symmetric(horizontal: 8),
                   child: Column(
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(data.data_values!.catatan!),
-                        ],
-                      ),
+                      Row(children: <Widget>[
+                        Expanded(
+                          child: Html(
+                            data: data.data_values!.title!,
+                          ),
+                        ),
+                      ]),
                       SizedBox(
                         height: 10,
                       ),

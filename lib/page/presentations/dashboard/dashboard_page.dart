@@ -3,6 +3,7 @@ import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hastrade/page/firebase/firebase_controller.dart';
 import 'package:hastrade/page/presentations/dashboard/dashboard_controller.dart';
 import 'package:hastrade/page/presentations/privacy_police/privacy_binding.dart';
 import 'package:hastrade/page/presentations/privacy_police/privacy_police_page.dart';
@@ -20,8 +21,13 @@ class DashboardPage extends GetView<DashboardController> {
   @override
   Widget build(BuildContext context) {
     final profilController = Get.put(ProfilController());
+    final firebaseController = Get.put(FirebaseController());
 
-    return GetBuilder<DashboardController>(builder: (controller) {
+    return GetBuilder<DashboardController>(initState: (_) {
+      firebaseController.registerNotification();
+      firebaseController.checkForInitialMessage();
+      firebaseController.notifInBackground();
+    }, builder: (controller) {
       return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
@@ -58,7 +64,7 @@ class DashboardPage extends GetView<DashboardController> {
                       onPressed: () {
                         Scaffold.of(context).openEndDrawer();
                       },
-                    ))
+                    )),
           ],
         ),
         endDrawer: Drawer(

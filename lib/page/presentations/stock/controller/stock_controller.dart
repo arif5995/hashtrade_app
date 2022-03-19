@@ -35,11 +35,11 @@ class StockController extends GetxController {
     _currentPage += 5;
     var res = await Network().getDataStock('/stok/$_currentPage');
     var data = json.decode(res.body);
-    print("page $data");
+    print("stok $data");
     if ((data as List).isNotEmpty) {
       stokModel.addAll((data as List).map((e) => StokModel.fromJson(e)));
       update();
-      print("page 1 $_currentPage");
+      print("stok 1 $_currentPage");
     } else {
       stokModel.clear();
       _currentPage = 0;
@@ -64,7 +64,7 @@ class StockController extends GetxController {
     if (res.statusCode == 200) {
       loading = false;
       update();
-      stokModel.addAll((data as List).map((e) => StokModel.fromJson(e)));
+      stokModel.assignAll((data as List).map((e) => StokModel.fromJson(e)));
       print("DATA 1 ${stokModel}");
     } else {
       loading = false;

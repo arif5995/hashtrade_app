@@ -22,8 +22,14 @@ void main() async {
   runApp(NewMyApp());
 }
 
-class NewMyApp extends StatelessWidget {
+class NewMyApp extends StatefulWidget {
   const NewMyApp({Key? key}) : super(key: key);
+
+  @override
+  _NewMyAppState createState() => _NewMyAppState();
+}
+
+class _NewMyAppState extends State<NewMyApp> {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
@@ -54,56 +60,3 @@ class NewMyApp extends StatelessWidget {
     );
   }
 }
-
-// class MyApp extends StatelessWidget {
-//   static final String title = 'HasTrade';
-//
-//   @override
-//   Widget build(BuildContext context) => GetMaterialApp(
-//         debugShowCheckedModeBanner: false,
-//         title: title,
-//         theme: ThemeData(primarySwatch: Colors.blue),
-//         home: CheckAuth(),
-//       );
-// }
-//
-// class CheckAuth extends StatefulWidget {
-//   @override
-//   _CheckAuthState createState() => _CheckAuthState();
-// }
-//
-// class _CheckAuthState extends State<CheckAuth> {
-//   bool isAuth = false;
-//
-//   @override
-//   void initState() {
-//     super.initState();
-//     _checkIfLoggedIn();
-//   }
-//
-//   void _checkIfLoggedIn() async {
-//     SharedPreferences localStorage = await SharedPreferences.getInstance();
-//     var token = localStorage.getString('token');
-//     if (token != null) {
-//       if (mounted) {
-//         setState(() {
-//           isAuth = true;
-//         });
-//       }
-//     }
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     Widget child;
-//     if (isAuth) {
-//       child = MyHomePage();
-//     } else {
-//       child = OnBoardingPage();
-//     }
-//
-//     return Scaffold(
-//       body: child,
-//     );
-//   }
-// }

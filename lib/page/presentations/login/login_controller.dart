@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:hastrade/common/helper/constant_helper.dart';
@@ -18,12 +19,14 @@ class LoginController extends GetxController {
   var visible = true.obs;
   var sosmed = <Sosmed>[].obs;
   var load = false.obs;
+  var token_fcm = "".obs;
 
   @override
   void onInit() {
     // TODO: implement onInit
     super.onInit();
     sosmedia();
+    getTokenFcm();
   }
 
   void hidePass() {
@@ -44,10 +47,21 @@ class LoginController extends GetxController {
     }
   }
 
+  void getTokenFcm() async {
+    token_fcm.value = (await FirebaseMessaging.instance.getToken())!;
+    print("TOKEN FCM $token_fcm");
+  }
+
   void Login(BuildContext context) async {
     isLoading.value = true;
     DialogHelper.loading(context, content: 'Sedang Login...').show();
-    var data = {'email': email.value, 'password': password.value};
+    var data = {
+      'email': email.value,
+      'password': password.value,
+      'token_fcm': token_fcm.value
+    };
+
+    print("LOGIN $data");
     try {
       var res = await Network().auth(data, '/login');
       var body = json.decode(res.body);

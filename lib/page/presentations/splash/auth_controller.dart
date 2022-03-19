@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AuthController extends GetxController {
   var isVisible = false.obs;
   var token = "".obs;
+  var token_fcm = "".obs;
 
   @override
   void onInit() {

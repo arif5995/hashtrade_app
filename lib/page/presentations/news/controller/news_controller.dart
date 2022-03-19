@@ -23,6 +23,7 @@ class NewsController extends GetxController {
 
   void getDataNews(BuildContext context) async {
     loading = true;
+    _currentPage = 0;
     var res = await Network().getDataStock('/blog/0');
     var data = json.decode(res.body);
     print('news ${json.decode(res.body)}');
@@ -55,8 +56,8 @@ class NewsController extends GetxController {
     var bodi = json.decode(res.body);
     DialogHelper.loading(context, content: 'Mohon menunggu').show();
     if (bodi != []) {
-      newsDetailModel.value =
-          (bodi as List).map((element) => StokModel.fromJson(element)).toList();
+      newsDetailModel.assignAll(
+          (bodi as List).map((element) => StokModel.fromJson(element)));
       // detailStok.
       if (newsDetailModel.isNotEmpty) {
         loading = false;

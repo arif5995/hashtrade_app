@@ -5,72 +5,81 @@ import 'package:get/get.dart';
 import 'package:hastrade/page/presentations/videos/binding/videos_binding.dart';
 import 'package:hastrade/page/presentations/videos/videos_detail_page.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
-
+import 'package:stylish_dialog/stylish_dialog.dart';
 import '../../../../common/helper/dialog_helper.dart';
 import '../../../../common/helper/youtube_helper.dart';
 import '../../../../network/api.dart';
 import '../../../data/models/stok_model.dart';
 
 class VideosController extends GetxController {
-  var dataVideo = <StokModel>[].obs;
-  var dataDetailVideo = <StokModel>[].obs;
-  var controllerYoutube;
-  var flickController;
-  var _currentPage = 0;
+  var data = [].obs;
   var loading = false;
+  var videoModel = <StokModel>[].obs;
+  var dataDetailVideo = <StokModel>[].obs;
+  // var dataVideo = <StokModel>[].obs;
+  var loadImg = false.obs;
+  late StylishDialog _dialog;
+  var controllerYoutube;
+  int _currentPage = 1;
 
   @override
   void onInit() {
-    print("video");
+    print('GET Video');
+    //getAnalisisByDateNow();
     super.onInit();
+  }
+
+  Future refreshVideo() async {
+    loading = true;
+    videoModel.clear();
+    _currentPage += 20;
+    var res = await Network().getDataStock('/video/$_currentPage');
+    var data = json.decode(res.body);
+    print("News $data");
+    if ((data as List).isNotEmpty) {
+      videoModel.addAll((data as List).map((e) => StokModel.fromJson(e)));
+      update();
+      print("Video 1 $_currentPage");
+    } else {
+      videoModel.clear();
+      _currentPage = 0;
+      var res = await Network().getDataStock('/video/$_currentPage');
+      var data = json.decode(res.body);
+      videoModel.addAll((data as List).map((e) => StokModel.fromJson(e)));
+      loading = false;
+      update();
+      print("DATA VIDEO $dataDetailVideo");
+    }
+    print("DATA 3 $_currentPage " "${videoModel}");
+    loading = false;
   }
 
   void getVideo(BuildContext context) async {
     loading = true;
-    var response = await Network().getData('/video/0');
-    final data = json.decode(response.body);
-
-    print("VIDEO $data");
-    if (response.statusCode == 200) {
+    _currentPage = 0;
+    var res = await Network().getDataStock('/video/0');
+    var data = json.decode(res.body);
+    print('VIDEO ${json.decode(res.body)}');
+    print('STATUS ${res.statusCode}');
+    if (res.statusCode == 200) {
       loading = false;
       update();
-      dataVideo.value =
-          (data as List).map((element) => StokModel.fromJson(element)).toList();
+      videoModel.assignAll((data as List).map((e) => StokModel.fromJson(e)));
+      print("DATA 1 $videoModel}");
     } else {
       loading = false;
       update();
       DialogHelper.warning(context,
-              title: "Perhatian!",
-              content: 'Video Kosong!',
-              widget: TextButton(
-                  onPressed: () {
-                    Get.back();
-                  },
-                  child: Text('Oke')))
+          title: "Perhatian!",
+          content: 'Video Kosong!',
+          widget: TextButton(
+              onPressed: () {
+                Get.back();
+              },
+              child: Text('Oke')))
           .show();
+      print("DATA VIDEO ${res.body}");
     }
-  }
-
-  Future refreshVideos() async {
-    loading = true;
-    _currentPage += 5;
-    var res = await Network().getDataStock('/video/$_currentPage');
-    var data = json.decode(res.body);
-    if ((data as List).isNotEmpty) {
-      loading = false;
-      dataVideo.addAll((data as List).map((e) => StokModel.fromJson(e)));
-      update();
-    } else {
-      dataVideo.clear();
-      _currentPage = 0;
-      var res = await Network().getDataStock('/video/$_currentPage');
-      var data = json.decode(res.body);
-      dataVideo.addAll((data as List).map((e) => StokModel.fromJson(e)));
-      loading = false;
-      update();
-    }
-    update();
-    print("DATA 2 $_currentPage");
   }
 
   void getDetailVideo(int id, BuildContext context) async {

@@ -15,9 +15,9 @@ class NewsDetailPage extends GetView<NewsController> {
         title: Text("Detail News"),
       ),
       body: ListView.builder(
-          itemCount: controller.newsDetailModel.length,
+          itemCount: controller.detailNews.length,
           itemBuilder: (context, index) {
-            var data = controller.newsDetailModel[index];
+            var data = controller.detailNews[index];
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: Card(

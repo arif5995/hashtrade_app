@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -32,7 +31,7 @@ class StockController extends GetxController {
   Future refreshStok() async {
     loading = true;
     stokModel.clear();
-    _currentPage += 5;
+    _currentPage += 20;
     var res = await Network().getDataStock('/stok/$_currentPage');
     var data = json.decode(res.body);
     print("stok $data");

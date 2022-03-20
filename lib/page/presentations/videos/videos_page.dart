@@ -25,11 +25,11 @@ class VideosPage extends GetView<VideosController> {
             : Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: RefreshIndicator(
-                  onRefresh: controller.refreshVideos,
+                  onRefresh: controller.refreshVideo,
                   child: ListView.builder(
-                    itemCount: controller.dataVideo.length,
+                    itemCount: controller.videoModel.length,
                     itemBuilder: (BuildContext ctx, index) {
-                      var dataVideo = controller.dataVideo[index];
+                      var dataVideo = controller.videoModel[index];
                       return Card(
                         child: ListTile(
                           leading: dataVideo.data_values!.descriptionNic != ""

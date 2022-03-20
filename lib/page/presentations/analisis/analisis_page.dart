@@ -22,7 +22,7 @@ class AnalisisPage extends GetView<AnalisisController> {
             : Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: RefreshIndicator(
-                  onRefresh: controller.refreshData,
+                  onRefresh: controller.refreshAnalisis,
                   child: ListView.builder(
                     itemCount: controller.analisisModel.length,
                     itemBuilder: (BuildContext ctx, index) {

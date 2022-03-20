@@ -14,11 +14,9 @@ class NewsPage extends GetView<NewsController> {
     return Scaffold(
         body: SafeArea(
             child: GetBuilder<NewsController>(
-      init: NewsController(),
-      initState: (val) {
-        print("News");
-        controller.getDataNews(context);
-      },
+              initState: (_) {
+                controller.getNews(context);
+              },
       builder: (controller) {
         return controller.loading
             ? Center(child: CupertinoActivityIndicator())

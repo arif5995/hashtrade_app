@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:hastrade/page/presentations/stock/controller/stock_controller.dart';
 import '../../../common/helper/parse_helper.dart';
 import '../../../common/helper/constant_helper.dart';
+import 'package:hastrade/page/function/warna_text_catatan.dart';
 
 class StockPage extends GetView<StockController> {
   const StockPage({Key? key}) : super(key: key);
@@ -38,7 +39,7 @@ class StockPage extends GetView<StockController> {
                                       dataStock.data_values!.image!)
                               : Image.asset('assets/imagenotfound.png'),
                           title: Text(dataStock.data_values!.title!),
-                          trailing: Text(dataStock.data_values!.catatan!),
+                          trailing: warnaCatatan(dataStock.data_values!.catatan!),
                           onTap: () {
                             controller.getDetailStok(
                                 controller.stokModel[index].id!, context);
@@ -53,4 +54,5 @@ class StockPage extends GetView<StockController> {
       },
     )));
   }
+
 }

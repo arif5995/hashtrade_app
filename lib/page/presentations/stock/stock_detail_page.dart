@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:hastrade/common/helper/constant_helper.dart';
 import 'package:hastrade/common/helper/parse_helper.dart';
 import 'package:hastrade/page/presentations/stock/controller/stock_controller.dart';
+import 'package:hastrade/page/function/warna_text_catatan.dart';
 
 class StockDetailPage extends GetView<StockController> {
   const StockDetailPage({Key? key}) : super(key: key);
@@ -44,7 +45,7 @@ class StockDetailPage extends GetView<StockController> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text("Status : "),
-                          Text(data.data_values!.catatan!),
+                          warnaCatatan(data.data_values!.catatan!),
                         ],
                       ),
                       SizedBox(
